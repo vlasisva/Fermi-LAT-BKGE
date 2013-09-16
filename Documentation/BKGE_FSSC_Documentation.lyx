@@ -1,0 +1,2495 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass paper
+\begin_preamble
+\usepackage[T1]{fontenc}
+\usepackage{ae,aecompl}
+\end_preamble
+\use_default_options false
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement h
+\paperfontsize default
+\spacing single
+\use_hyperref true
+\pdf_title "Guide for Fermi-LAT BKGE Tool"
+\pdf_author "Vlasios Vasileiou"
+\pdf_bookmarks true
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks false
+\pdf_pdfborder false
+\pdf_colorlinks false
+\pdf_backref false
+\pdf_pdfusetitle true
+\papersize a4paper
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date true
+\use_refstyle 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 2.5cm
+\topmargin 3cm
+\rightmargin 2.5cm
+\bottommargin 3cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Fermi-LAT Background Estimator 
+\end_layout
+
+\begin_layout Author
+Vlasios Vasileiou (vlasisva@gmail.com)
+\end_layout
+
+\begin_layout Institution
+CNRS/IN2P3 Laboratoire Univers et Particules de Montpellier & Universit
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+'
+\end_layout
+
+\end_inset
+
+e Montpellier II
+\end_layout
+
+\begin_layout Address
+BKGE version v4 - September 2013
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+The 
+\emph on
+Fermi-LAT Background Estimator
+\emph default
+ (BKGE) is a publicly available open-source tool that can estimate the expected
+ background of the Fermi-LAT for any observational configuration and duration.
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Because of its 15% systematic error, the BKGE is mostly applicable to short
+ duration <1ks observations.
+\end_layout
+
+\end_inset
+
+ It produces results in the form of text files, ROOT files, 
+\emph on
+gtlike 
+\emph default
+source-model files (for LAT maximum likelihood analyses), and PHA I/II FITS
+ files (for RMFit/XSpec spectral fitting analyses).
+ It currently works with Pass7 Transient-class events.
+ However, as new LAT data classes become available (e.g., Pass8), its functionalit
+y will be extended.
+\end_layout
+
+\begin_layout Standard
+Its core is written in C++ and its user interface in Python.
+ The tool's internal workings are fully documented in Ref.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bkge_ref"
+
+\end_inset
+
+.
+ Please cite this paper to acknowledge the tool's use.
+ Please see the associated publication for caveats, scope, and the expected
+ accuracy of its predictions.
+\end_layout
+
+\begin_layout Section
+Release Notes
+\end_layout
+
+\begin_layout Standard
+This software is provided as is.
+ If you have any questions on scope, degree of applicability, or if you
+ have any spurious results please do not hesitate to email me at vlasisva@gmail.c
+om.
+ If you have any problems compiling it, I can provide limited support based
+ on my experience compiling it on Ubuntu Linux.
+\end_layout
+
+\begin_layout Standard
+The C++ code of the BKGE was written by Vlasios Vasileiou while at NASA,
+ Goddard Space Flight Center and CNRS/IN2P3 Laboratoire Univers et Particules
+ de Montpellier.
+ The python interface was written by Vlasios Vasileiou, with debugging help
+ and support from Giacomo Vianello and Nicola Omodei (of SLAC and Stanford
+ University).
+ This tool was produced within the Gamma Ray Bursts group of the Fermi-LAT
+ Collaboration.
+\end_layout
+
+\begin_layout Standard
+You are free to use, modify, and distribute the BKGE (here BKGE refers to
+ the contents of the 
+\emph on
+BKGE
+\emph default
+ folder).
+ In case of modification, you are not allowed to remove its branding (i.e.,
+ name, version, and author).
+ In case of distribution, you have to also include this document with the
+ distributed package.
+\end_layout
+
+\begin_layout Standard
+If you like this tool and are performing Fermi-LAT GRB analyses, you are
+ encouraged to also check out 
+\emph on
+gtBurst
+\emph default
+
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+http://sourceforge.net/projects/gtburst/
+\end_layout
+
+\end_inset
+
+, a GUI for GRB analysis developed for by G.
+ Vianello.
+\end_layout
+
+\begin_layout Section
+Compilation
+\end_layout
+
+\begin_layout Standard
+These instructions apply to Linux (with gcc) and have been tested on an
+ Ubuntu 13.04 64bit box.
+ The tool should also compile on Macintosh with small modifications (by
+ you).
+ It is not expected to work on OSX Tiger, OSX Leopard, and any Mac OSX PPC
+ distribution because the 
+\emph on
+Fermi Science Tools 
+\emph default
+(ST), a required package by the BKGE, does not run on these systems.
+ Finally, the BKGE does not work on Windows.
+\end_layout
+
+\begin_layout Subsection
+Software requirements
+\end_layout
+
+\begin_layout Standard
+The BKGE depends on the following additional pieces of software:
+\end_layout
+
+\begin_layout Itemize
+Standard compilation tools, such as gcc, make, ld, etc.
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Fermi Science Tools
+\emph default
+
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+http://fermi.gsfc.nasa.gov/ssc/data/analysis/software/
+\end_layout
+
+\end_inset
+
+.
+ The BKGE runs some of these tools (e.g., gtselect, gtexpcube2, gtltcube)
+ as part of estimating the background.
+\end_layout
+
+\begin_layout Itemize
+ROOT
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+http://root.cern.ch
+\end_layout
+
+\end_inset
+
+.
+ The BKGE compilation makefile needs to have access to the ROOT header files
+ and compiled binaries, and the Python interface to PyROOT.
+ Depending on your ST configuration you may or may not have ROOT installed.
+ In the latter case, you need to setup your environment before compiling
+ or running the BKGE.
+ For csh:
+\end_layout
+
+\begin_layout Quotation
+
+\series bold
+setenv ROOTSYS <the path where ROOT is installed>
+\end_layout
+
+\begin_layout Quotation
+
+\series bold
+setenv PATH ${PATH}:${ROOTSYS}/bin
+\end_layout
+
+\begin_layout Quotation
+
+\series bold
+setenv PYTHONPATH ${ROOTSYS}/lib
+\end_layout
+
+\begin_layout Quotation
+
+\series bold
+setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${ROOTSYS}/lib
+\end_layout
+
+\begin_layout Itemize
+Python, for the interface.
+ Take note that the ST already come with an installation of Python along
+ with several needed packages (e.g., pyfits).
+ 
+\end_layout
+
+\begin_layout Itemize
+Optionally, if you need output in the form of PHA I/II FITS files:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+A working installation of the 
+\emph on
+HEASARC FTOOLS
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+
+\emph on
+http://heasarc.gsfc.nasa.gov/ftools/
+\end_layout
+
+\end_inset
+
+
+\emph default
+, and especially the tool 
+\emph on
+ascii2pha
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+
+\emph on
+http://heasarc.gsfc.nasa.gov/lheasoft/ftools/fhelp/ascii2pha.txt
+\end_layout
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Itemize
+pyfits
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+http://www.stsci.edu/institute/software_hardware/pyfits
+\end_layout
+
+\end_inset
+
+.
+ Hint: if your system does not already have pyfits installed, you can switch
+ to the Python installation of the ST which includes it.
+\end_layout
+
+\end_deeper
+\begin_layout Subsection
+Compilation Steps
+\end_layout
+
+\begin_layout Itemize
+First of all, make sure that the tool 
+\emph on
+root-config
+\emph default
+ of ROOT can be executed, since it is needed by the makefile.
+\end_layout
+
+\begin_layout Itemize
+Then make sure that your Science Tools are properly setup.
+ This entails in setting your FERMI_DIR environmental variable (with the
+ full path of your ST distribution) and executing the fermi-init.csh (.sh)
+ script of the ST.
+ 
+\end_layout
+
+\begin_layout Itemize
+Unzip the BKGE tarball and enter the BKGE directory.
+ Then check the makefile and make sure that the line starting with LINK_TARGET
+ points to the correct versions of the CLHEP and cfitsio libraries.
+ The versions included by the ST at the time of the BKGE's release were
+ 3.29 and 2.1.0.1 respectively, so we link against 
+\emph on
+libcfitsio_3.29.so
+\emph default
+ and 
+\emph on
+libCLHEP-2.1.0.1
+\emph default
+.so.
+ Check your ${FERMI_DIR}/lib directory and see if you have
+\emph on
+ 
+\emph default
+these two files.
+ If not, then you have some newer version and you have to update the LINK_TARGET
+ line accordingly.
+ 
+\end_layout
+
+\begin_layout Itemize
+After you are done, just
+\end_layout
+
+\begin_layout Quotation
+
+\series bold
+make
+\end_layout
+
+\begin_layout Itemize
+If all goes well you will have a a ROOT library named 
+\emph on
+libBKGE.so
+\emph default
+ in the main folder of the BKGE.
+\end_layout
+
+\begin_layout Section
+How to use the BKGE
+\end_layout
+
+\begin_layout Standard
+You can use the BKGE through the provided Python script 
+\emph on
+BKGE_interface.py
+\emph default
+.
+ This script prepares the data, performs some cross-checks, and calls (through
+ pyROOT) the C++ functions of the BKGE.
+ In principle, with some programming from your part to recreate the python-code
+ functionality, you can use the C++ code directly either by linking the
+ BKGE library in your code or by talking to the BKGE directly from inside
+ ROOT.
+ This option is not suggested.
+ However, if you decide to pursue it, please consult the source codes of
+ the Python interface and of the BKGE.
+ Before starting you need to add the 
+\emph on
+external 
+\emph default
+folder to your LD_LIBRARY_PATH as for csh:
+\end_layout
+
+\begin_layout Quotation
+
+\series bold
+setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:<full path of external folder>
+\end_layout
+
+\begin_layout Standard
+The Python interface provides functions that can produce background estimates
+ in various formats, as shown below.
+ The common arguments among these functions are explained in Table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:Arguments-common-among"
+
+\end_inset
+
+.
+ The remaining, special to each function, arguments are explained below.
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\series bold
+CalculateBackground
+\series default
+\size small
+ 
+\size default
+(start, stop , grb_trigger_time, RA, DEC, FT1, FT2, OUTPUT_DIR=
+\begin_inset Quotes eld
+\end_inset
+
+output
+\begin_inset Quotes erd
+\end_inset
+
+, emin=-1, emax=-1, ebins=-1, chatter=1, overwrite=False, EvaluateMaps=True,
+ CalcResiduals=True, ROI_Calculate=1, ROI_Containment=0.95, ROI_Localization_Erro
+r=0, ROI_Radius=12, ROI_Max_Radius=12, GRB_NAME=
+\begin_inset Quotes eld
+\end_inset
+
+
+\begin_inset Quotes erd
+\end_inset
+
+, ROI_RadiusFile=
+\begin_inset Quotes eld
+\end_inset
+
+
+\begin_inset Quotes erd
+\end_inset
+
+ )
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Estimates the background for a simple observation.
+ The output is in the form of a text and a ROOT file, and of some pretty
+ graphics (see e.g., Fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Output-samples-from"
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+The arguments 
+\emph on
+EvaluateMaps
+\emph default
+ and 
+\emph on
+CalcResiduals 
+\emph default
+are to be used internally by the code.
+ Please ignore them.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+\align left
+
+\series bold
+Make_BKG_PHA
+\series default
+(start, stop, grb_trigger_time, RA, DEC, FT1, FT2, emin, emax, ebins, ROI_Calcul
+ate, OUTPUT_DIR=
+\begin_inset Quotes eld
+\end_inset
+
+output", chatter=1, overwrite=False, ROI_Containment=0.95, ROI_Localization_Error
+=0, ROI_Max_Radius=12, ROI_Radius=12, GRB_NAME=
+\begin_inset Quotes eld
+\end_inset
+
+
+\begin_inset Quotes erd
+\end_inset
+
+, ROI_RadiusFile=
+\begin_inset Quotes eld
+\end_inset
+
+
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Estimates the background for a single observation and produces a PHA FITS
+ file that can be used for spectral fitting with RMFit or XSpec.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+\align left
+
+\series bold
+Make_BKG_PHA2
+\series default
+(grb_trigger_time, RA, DEC, FT1, FT2, emin, emax, ebins, ROI_Calculate,
+ ROI_Localization_Error=0, ROI_Max_Radius=12, ROI_Radius=12, ROI_Containment=0.95
+, ROI_RadiusFile=
+\begin_inset Quotes eld
+\end_inset
+
+
+\begin_inset Quotes erd
+\end_inset
+
+, OUTPUT_DIR=
+\begin_inset Quotes eld
+\end_inset
+
+output", GRB_NAME=
+\begin_inset Quotes eld
+\end_inset
+
+
+\begin_inset Quotes erd
+\end_inset
+
+, chatter=1, overwrite=False, Time_bins_def_file=
+\begin_inset Quotes eld
+\end_inset
+
+
+\begin_inset Quotes erd
+\end_inset
+
+, start=-1, stop=-1, dt=-1) 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Estimates the background for a series of consecutive or not observations
+ to produce a PHA II FITS file that can be used for spectral fitting with
+ RMFit or XSpec.
+ 
+\end_layout
+
+\begin_layout Itemize
+There are two ways to specify the time intervals.
+ Either by providing a triplet of (
+\emph on
+start, stop, dt
+\emph default
+) to process a series of consecutive intervals with duration 
+\emph on
+dt 
+\emph default
+each, or by providing a file containing the time-bin definitions through
+ the 
+\emph on
+Time_bins_def_file
+\emph default
+ argument.
+ This file can be either a text file containing one space-separated start/stop
+ pair of time offsets (i.e., times relatives to the grb_trigger_time) per
+ line or a FITS bindef file produced using the ST 
+\emph on
+gtbindef.
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+
+\emph on
+http://fermi.gsfc.nasa.gov/ssc/data/analysis/scitools/help/gtbindef.txt
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+\align left
+
+\series bold
+MakeGtLikeTemplate
+\series default
+(start, stop, grb_trigger_time, RA, DEC, FT1, FT2, OUTPUT_DIR= 
+\begin_inset Quotes eld
+\end_inset
+
+output", chatter=1, ROI_Radius=15, GRB_NAME=
+\begin_inset Quotes eld
+\end_inset
+
+
+\begin_inset Quotes erd
+\end_inset
+
+ )
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Estimates the background for a simple observation and saves it in the form
+ of a text file appropriate to be used by the maximum-likelihood analysis
+ tool
+\emph on
+ gtlike
+\emph default
+.
+
+\emph on
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Float table
+placement h
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Tabular
+<lyxtabular version="3" rows="17" columns="4">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top" width="20col%">
+<column alignment="left" valignment="top" width="14col%">
+<column alignment="left" valignment="top" width="8col%">
+<column alignment="left" valignment="top" width="50col%">
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\size small
+Argument name
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\size small
+Units
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\size small
+Default
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\size small
+Comments
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+start, stop
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+sec
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+--
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Edges of the observation under consideration, relative to grb_trigger_time
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+grb_trigger_time
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+sec
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+--
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+GRB trigger time in FERMI Mission Elapsed Time (MET)
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+http://fermi.gsfc.nasa.gov/ssc/data/analysis/documentation/Cicerone/Cicerone_Data/T
+ime_in_ScienceTools.html
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+RA, DEC
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+deg
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+--
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Center of your Region of Interest (ROI)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+FT1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+--
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+--
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Full or relative path of an FT1 (LAT events file) spanning the observation
+ under consideration.
+ The code needs these files to know the Good Time Intervals (GTIs).
+ It does not use the events contained in them.
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+FT2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+--
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+--
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Full or relative path of an FT2 (LAT spacecraft file) spanning the observation
+ under consideration.
+ 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+OUTPUT_DIR
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+--
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset Quotes eld
+\end_inset
+
+output
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Full or relative path of directory with BKGE's results
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+(emin,emax,ebins)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+(MeV, MeV, #)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+-1,-1,-1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Limits of the energy range of the produced background estimates and numbers
+ of energy bins.
+ For best accuracy do not use these parameter to use the default configuration
+ present in the BKGE data files.
+ For the P7 Transient class, the default is (50MeV - 150GeV, 20 bins).
+ 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+chatter
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+--
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Verbosity parameter.
+ Takes values 1--5
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+overwrite
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Boolean
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+False
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+overwrite results?
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+ROI_Calculate
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+0,1,2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Should the code calculate an energy-dependent ROI radius? See text for explanati
+on.
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+ROI_Radius
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+deg
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+12
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+User-specified ROI radius (for ROI_Calculate==0)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+ROI_Containment
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+--
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+0.95
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Containment fraction of the P7TRANSIENT_V6 PSF used for calculating the
+ ROI Radius (for ROI_Calculate==1)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+ROI_Max_Radius
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+deg
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+12
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Maximum value of the ROI radius (for ROI_Calculate==1).
+ Use 0 to have an uncapped max radius.
+ A value of 12 deg is typically used in Fermi-LAT publications.
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+ROI_Localization_Error
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+deg
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Error of the GRB localization (for ROI_Calculate==1).
+ This is added in quadrature to the containment fraction of the LAT PSF
+ to produce the final ROI radius.
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+ROI_RadiusFile
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+--
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset Quotes eld
+\end_inset
+
+
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+This is the full path of a file containing ROI radius data (for ROI_Calculate==2
+)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+GRB_NAME
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+--
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset Quotes eld
+\end_inset
+
+
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Name of the GRB.
+ It is only used for naming output folders.
+ Leave empty for the code to decide a name based on the trigger MET.
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:Arguments-common-among"
+
+\end_inset
+
+Arguments common among the functions comprising the python interface.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Energy binning
+\end_layout
+
+\begin_layout Standard
+The BKGE predicts the background internally in 20 consecutive log-energy
+ bins ranging from 50MeV to 150GeV.
+ Using the 
+\emph on
+emin, emax, ebins 
+\emph default
+parameters, you can ask for an alternative binning configuration.
+ Take note, however, that if your desired binning is considerably different
+ than the default configuration (e.g., the edges of your desired bins are
+ not aligned with the default ones), there may be a small accuracy penalty.
+ You cannot ask for estimates in energies external to the 50MeV-150GeV range,
+ and you cannot have non logarithmic-in-energy binning.
+ 
+\end_layout
+
+\begin_layout Subsubsection*
+Region of Interest
+\end_layout
+
+\begin_layout Standard
+The BKGE can produce estimates for several kinds of Region of Interest (ROI)
+ configurations, controlled by the 
+\emph on
+ROI_Calculate
+\emph default
+ argument, as:
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+ROI_Calculate
+\emph default
+=0 --> Use a constant ROI radius equal to
+\emph on
+ ROI_Radius
+\emph default
+.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+ROI_Calculate
+\emph default
+=1 --> Calculate an energy-dependent ROI equal to the 
+\emph on
+<ROI_Containment>
+\emph default
+ containment radius
+\emph on
+ 
+\emph default
+of the LAT point spread function (PSF) and the 
+\emph on
+ROI_Localization_Error
+\emph default
+ added in quadrature.
+ Simce the LAT PSF depends on the energy and the off-axis angle of the events,
+ it is evaluated at an energy equal to the geometric mean of each energy
+ bin and an off-axis angle equal to that of the center of the ROI (i.e., at
+ 
+\emph on
+RA/DEC
+\emph default
+) at the middle of the analyzed time interval (i.e., at
+\emph on
+ 
+\emph default
+time 
+\emph on
+(start+stop
+\emph default
+)/2)
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Exception: if your time interval starts before the trigger time, the PSF
+ is evaluated at an off-axis angle at trigger time instead.
+\end_layout
+
+\end_inset
+
+.
+ The resulting ROI radius is capped at a value of 
+\emph on
+ROI_Max_Radius
+\emph default
+ to prevent it from becoming too wide (hence the background contamination
+ becoming too large) at small energies.
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+ROI_Calculate
+\emph default
+=2 --> Read ROI radius from file given by 
+\emph on
+ROI_RadiusFile
+\emph default
+ parameter.
+ The file should contain 
+\emph on
+ebins
+\emph default
+ entries, one per line, with each entry beingis a ROI radius in degrees.
+ 
+\end_layout
+
+\begin_layout Subsubsection*
+Earth limb and Zenith theta cut
+\end_layout
+
+\begin_layout Standard
+The Earth-limb component of the background is not fully accounted for by
+ the BKGE.
+ A standard procedure in LAT data analysis is to minimize the contribution
+ from this component using a cut on the maximum acceptable Zenith theta
+ angle of the events.
+ The BKGE produces estimates following such a cut, and specifically a 100deg
+ maximum value of Zenith theta.
+ There is no way to change this value.
+\end_layout
+
+\begin_layout Subsubsection*
+FT1 and FT2 files
+\end_layout
+
+\begin_layout Standard
+The BKGE needs an FT1 and an FT2 file spanning the observation under considerati
+on.
+ The time interval spanned by the FT1 file can be as small as that of the
+ observation, while the FT2 file needs to have some padding around the observati
+on of at least 5 minutes.
+ The latter is required because the FT2 files available to the public contain
+ the pointing information in 30s intervals.
+ Because the BKGE performs calculations on finer time scales (down to 5s),
+ it interpolates these 30s-interval data to produce a time series with 1s
+ precision.
+ The 5 minutes padding time is needed to avoid the edge effects of the interpola
+tion appearing inside our time interval.
+ 
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+The LAT collaboration has also internally access to 1s sampling-rate FT2
+ files, which can be used by the BKGE without the need of interpolation
+ and extra padding.
+ Such files may or may not become publicly available in the future.
+ 
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+The BKGE does not use the events inside the FT1 file for estimation purposes,
+ but only for producing some pretty graphics comparing actual and predicted
+ numbers of events.
+ However, the important piece of information in the FT1 files is the Good
+ Time Intervals (GTIs), which inform the BKGE when the LAT was off or whether
+ you have excluded some parts of the observation from your observation.
+ The latter can happen during a maximum likelihood analysis with 
+\emph on
+gtlike
+\emph default
+, in which the tool 
+\emph on
+gtmktime 
+\emph default
+is first applied on the FT1 files to reject all time intervals for which
+ the ROI radius intersects your Zenith theta cut.
+ In such a case, parts of your original time interval under consideration
+ might be excluded, as reflected in the GTIs saved in the produced by 
+\emph on
+gtmktime
+\emph default
+ FT1 file.
+ By providing this FT1 file to the BKGE, you can be sure that the BKGE will
+ produce estimates for an observation described by the exact GTIs of your
+ analysis.
+ 
+\end_layout
+
+\begin_layout Subsection
+Output in ROOT and text file forms
+\end_layout
+
+\begin_layout Standard
+The simplest application is to ask for the estimated backround of a single
+ observation.
+ For example let's try to estimate the background during the prompt emission
+ phase (say 0-10s) of the very bright GRB090510.
+ 
+\end_layout
+
+\begin_layout Standard
+We can download these files from the 
+\emph on
+Fermi Science Support Center
+\emph default
+ (FSSC), and specifically from the LAT data server
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+http://fermi.gsfc.nasa.gov/cgi-bin/ssc/LAT/LATDataQuery.cgi
+\end_layout
+
+\end_inset
+
+.
+ We enter the name of the object (
+\begin_inset Quotes eld
+\end_inset
+
+GRB090510
+\begin_inset Quotes erd
+\end_inset
+
+), a 15deg ROI radius, a 50MeV-150GeV energy range (the energy range we
+ want to produce background estimates for), and a time interval extending
+ by 1ks after the trigger time, which is at FERMI Mission Elapsed Time (MET)
+ of 263607781.9710s.
+ We select 
+\begin_inset Quotes eld
+\end_inset
+
+Extended
+\begin_inset Quotes erd
+\end_inset
+
+ for the data type since the 
+\begin_inset Quotes eld
+\end_inset
+
+Photon
+\begin_inset Quotes erd
+\end_inset
+
+ type does not include Transient-class events.
+ We check the Spacecraft data box to also ask for an FT2 file.
+ The data server prepares the file and also gives us the direction of the
+ GRB, which we'll use: RA/DEC=(333.553, -26.5975)deg (J2000).
+ 
+\end_layout
+
+\begin_layout Standard
+We start by running Python in interactive mode and executing the BKGE interface
+ as:
+\end_layout
+
+\begin_layout Quote
+
+\series bold
+python -i BKGE_interface.py
+\end_layout
+
+\begin_layout Standard
+Let's first ask for a background estimate at an interval far after the end
+ of the GRB, say at 500-700s post-trigger:
+\end_layout
+
+\begin_layout LyX-Code
+
+\series bold
+CalculateBackground(start=500, stop=700, RA=333.553, DEC=-26.5975, grb_trigger_tim
+e=263607781.9710, FT1="/tmp/FT1.fits", FT2="/tmp/FT2.fits")
+\end_layout
+
+\begin_layout Standard
+After less than a minute, the code finishes and produces the following output:
+\end_layout
+
+\begin_layout LyX-Code
+
+\series bold
+*----------------------------------------------*
+\end_layout
+
+\begin_layout LyX-Code
+
+\series bold
+| Background Estimator (public)                |
+\end_layout
+
+\begin_layout LyX-Code
+
+\series bold
+| v4 September 2013                            |
+\end_layout
+
+\begin_layout LyX-Code
+
+\series bold
+|                                              |
+\end_layout
+
+\begin_layout LyX-Code
+
+\series bold
+| contact: Vlasios Vasileiou                   |
+\end_layout
+
+\begin_layout LyX-Code
+
+\series bold
+| vlasisva@gmail.com                           |
+\end_layout
+
+\begin_layout LyX-Code
+
+\series bold
+| http://arxiv.org/abs/1307.4284               |
+\end_layout
+
+\begin_layout LyX-Code
+
+\series bold
+*----------------------------------------------*
+\end_layout
+
+\begin_layout LyX-Code
+
+\series bold
+BackgroundEstimator: Using P7TRANSIENT_V6 data class.
+\end_layout
+
+\begin_layout LyX-Code
+
+\series bold
+Data Files Energy: (50.0-150000.0)MeV - 20 bins
+\end_layout
+
+\begin_layout LyX-Code
+
+\series bold
+User is using the default (shown above) energy configuration
+\end_layout
+
+\begin_layout LyX-Code
+
+\series bold
+Make_Background_Map: Calculating exposure
+\end_layout
+
+\begin_layout LyX-Code
+
+\series bold
+[********************]********************]
+\end_layout
+
+\begin_layout LyX-Code
+
+\series bold
+Out[1]: (37.0, 40.23, -0.57, -0.4)
+\end_layout
+
+\begin_layout Standard
+The function returns a list of values containing the number of detected
+ events, the number of estimated by the BKGE events, the significance, and
+ the significance if a 15% systematic error on the background estimate is
+ taken into account.
+ In addition, it produces the following files in the folder 
+\emph on
+output/GRB_MET_263607781.97/500.00_700.00/
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+The output folder is decided as <
+\emph on
+OUTPUT_DIR
+\emph default
+>/<
+\emph on
+GRB_NAME
+\emph default
+>/<START>_<STOP>
+\end_layout
+
+\end_inset
+
+ 
+\emph default
+:
+\end_layout
+
+\begin_layout Itemize
+A text file containing a range of information for each of the energy bins:
+ the edges, the actual and estimated number of events (both per bin and
+ cumulative), the exposure, and the ROI radius used.
+\end_layout
+
+\begin_layout Itemize
+A png image (see top panel of Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Output-samples-from"
+
+\end_inset
+
+) comparing the actual and estimated numbers of events, showing the ROI
+ radius used, and giving some configurational details.
+ This canvas is also saved in file with name 
+\emph on
+
+\begin_inset Quotes eld
+\end_inset
+
+...Results....root
+\begin_inset Quotes erd
+\end_inset
+
+
+\emph default
+ .
+\end_layout
+
+\begin_layout Itemize
+A ROOT file, 
+\emph on
+Plots.root
+\emph default
+, containing histograms with the LAT pointing information (i.e., data from
+ the FT2 file).
+\end_layout
+
+\begin_layout Itemize
+Various other ROOT and FITS files containing information produced in each
+ step of the background-estimation process.
+ You can check them out, but they should not be of direct interest to the
+ typical user.
+\end_layout
+
+\begin_layout Standard
+Repeating the above exercise, and to appreciate the brightness of GRB090510,
+ we ask for a background estimate from 0-10s post-trigger.
+ The BKGE predicts 2.4 events, while 266 are actually detected (that's bright!).
+ The result is in the right panel of Fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Output-samples-from"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename GRB_MET_263607781.97-P7TRANSIENT_V6_Results_263608282.0_200.0.png
+	width 80col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename GRB_MET_263607781.97-P7TRANSIENT_V6_Results_263607782.0_10.0.png
+	width 80col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Output-samples-from"
+
+\end_inset
+
+Output samples from the BKGE and GRB090510.
+ Top: 500-700s post-trigger (emission has subsided), bottom: 0-10s post-trigger
+ (strong emission).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Maximum-likelihood analysis template
+\end_layout
+
+\begin_layout Standard
+The 
+\emph on
+gtlike 
+\emph default
+tool, part of the ST, can be used to perform maximum likelihood analyses
+ on LAT data.
+ Part of these analyses is the description of a source model for the expected
+ background in the data.
+ The user has multiple ways for describing the source model
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+See http://fermi.gsfc.nasa.gov/ssc/data/analysis/scitools/source_models.html
+ 
+\end_layout
+
+\end_inset
+
+, with one of them called 
+\emph on
+FileFunction
+\emph default
+.
+ This option requires an input ASCII file with columns of energy and differentia
+l flux values, which the BKGE provides using the 
+\emph on
+MakeGtLikeTemplate
+\emph default
+ command, as:
+\end_layout
+
+\begin_layout Quote
+\align left
+
+\series bold
+MakeGtLikeTemplate(start=0, stop=10, RA=333.553, DEC=-26.5975, grb_trigger_time=26
+3607781.9710, FT1=
+\begin_inset Quotes eld
+\end_inset
+
+/tmp/FT1.fits", FT2=
+\begin_inset Quotes eld
+\end_inset
+
+/tmp/FT2.fits", ROI_Radius=15)
+\end_layout
+
+\begin_layout Standard
+This command produces three such ASCII text files with names ending in:
+\emph on
+ 
+\emph default
+
+\begin_inset Quotes eld
+\end_inset
+
+CR_EGAL.txt
+\emph on
+
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+
+\emph default
+GALGAMMAS.txt
+\emph on
+
+\begin_inset Quotes erd
+\end_inset
+
+
+\emph default
+, and 
+\begin_inset Quotes eld
+\end_inset
+
+TOTAL.txt
+\begin_inset Quotes erd
+\end_inset
+
+, describing the predicted background flux per energy bin of the Cosmic
+ Ray and extra-galactic components of the background (the 
+\begin_inset Quotes eld
+\end_inset
+
+isotropic background
+\begin_inset Quotes erd
+\end_inset
+
+), the point sources and diffuse galactic component of the background, and
+ their sum, respectively.
+ 
+\end_layout
+
+\begin_layout Standard
+You have freedom to model the LAT background in various ways with 
+\emph on
+gtlike
+\emph default
+.
+ You can describe it using a single total-background component or instead
+ use its two constituent components (GALGAMMAS and CR_EGAL) separately.
+ In the latter case, you can choose to model the CR_EGAL using the the BKGE,
+ the Galactic diffuse component using the templates provided by the LAT
+ collaboration
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+http://fermi.gsfc.nasa.gov/ssc/data/access/lat/BackgroundModels.html
+\end_layout
+
+\end_inset
+
+, and add any bright sources manually.
+ This is the approach adopted by the Fermi-LAT collaboration for creating
+ the first LAT GRB catalog
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-1"
+
+\end_inset
+
+, selected based on the fact that the diffuse-emission background templates
+ provide both spatial and spectral information of the background, while
+ the BKGE Python interface produces only a single text file (not a skymap)
+ containing only the spectral info
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+The BKGE does estimate the background from each direction in the sky, saved
+ in the secondary ROOT files in the output directory.
+ Thus, in principle, the functionality of creating predicted background
+ template skymaps for the Galactic diffuse plus point source components
+ is available.
+ However, the official templates are accurate enough so this functionality
+ was not developed.
+\end_layout
+
+\end_inset
+
+.
+ For analyses near the Galactic plane, where the flux gradient of the diffuse
+ component is large, the official LAT template provides more accurate modeling
+ of the Galactic diffuse background than the BKGE template.
+ 
+\end_layout
+
+\begin_layout Standard
+The ROI radius used by this function is always constant and equal to 
+\begin_inset Quotes eld
+\end_inset
+
+ROI_Radius
+\begin_inset Quotes erd
+\end_inset
+
+, since 
+\emph on
+gtlike 
+\emph default
+analysis is performed on fixed-ROI-radius data sets.
+ 
+\end_layout
+
+\begin_layout Subsubsection*
+Earth's Limb and Zenith theta cut
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+gtlike 
+\emph default
+and the BKGE try to minimize the Earth-limb component of the background
+ differently.
+ The BKGE treats a Zenith theta cut
+\emph on
+ 
+\emph default
+as a cut to be applied 
+\emph on
+directly on the events
+\emph default
+.
+ Thus, if your ROI intersects the Earth's limb, the background estimates
+ will correspond to 
+\emph on
+only the unocculted part of the ROI.
+ 
+\emph default
+On the other hand, 
+\emph on
+gtlike
+\emph default
+ applies a Zenith theta cut 
+\emph on
+on the data as a whole
+\emph default
+ and specifically on the 
+\emph on
+time intervals 
+\emph default
+(using 
+\emph on
+gtmktime
+\emph default
+)
+\emph on
+, 
+\emph default
+rejecting 
+\emph on
+all
+\emph default
+ events produced in intervals during which any part of the ROI intersected
+ your Zenith theta cut.
+ This different application of the Zenith theta cut can invalidate certain
+ analyses, if care is not exercised.
+ Specifically, you need to make sure to provide the BKGE with the FT1 file
+ produced by 
+\emph on
+gtmktime,
+\emph default
+ instead of the one given to 
+\emph on
+gtmktime
+\emph default
+.
+
+\emph on
+ 
+\emph default
+This way, the BKGE will know which parts of the observation were excluded
+ by 
+\emph on
+gtmktime
+\emph default
+ and will produce results proper for your specific 
+\emph on
+gtlike
+\emph default
+ analysis.
+ Finally, because you cannot change the Zenith theta value of the BKGE (it
+ is fixed at 100deg), you must use the same value in your 
+\emph on
+gtlike
+\emph default
+ analysis.
+\end_layout
+
+\begin_layout Subsubsection
+PHA and PHAII files for RMFit and XSpec
+\end_layout
+
+\begin_layout Standard
+We can produce a PHA I FITS file containing the background of a single observati
+on as:
+\end_layout
+
+\begin_layout Quote
+\align left
+
+\series bold
+Make_BKG_PHA(start=0, stop=10, RA=333.553, DEC=-26.5975, grb_trigger_time=26360778
+1.9710, FT1="/tmp/FT1.fits", FT2="/tmp/FT2.fits", emin=50, emax=150000, ebins=20)
+\end_layout
+
+\begin_layout Standard
+and for two consecutive observations each of 5s duration as:
+\end_layout
+
+\begin_layout Quote
+\align left
+
+\series bold
+Make_BKG_PHA2(start=0, stop=10, dt=5, RA=333.553, DEC=-26.5975, grb_trigger_time=2
+63607781.9710, FT1="/tmp/FT1.fits", FT2="/tmp/FT2.fits", emin=50, emax=150000,
+ ebins=20)
+\end_layout
+
+\begin_layout Standard
+The resulting files will be in the same output folder as above, and will
+ have 
+\emph on
+.pha 
+\emph default
+extensions.
+ Some comments:
+\end_layout
+
+\begin_layout Itemize
+Some parameters in these two commands, specifically 
+\emph on
+emin, emax, ebins, 
+\emph default
+and 
+\emph on
+ROI_Calculate
+\emph default
+, do not have a default value.
+ The user has to manually specify them just to be sure that the values meant
+ to be chosen by the user are actually chosen.
+ 
+\end_layout
+
+\begin_layout Itemize
+The produced FITS files have an additional table named 
+\emph on
+ROI_RADIUS 
+\emph default
+showing the used radius in the background estimate.
+ It is suggested that the user checks that the used ROI radius (as reported
+ in that table) is what was requested, especially if ROI_Calculate==1.
+ It is also a good idea to make sure that the ROI_Radius used in the BKGE
+ is exactly the one used in the code used for producing the actual events
+ files (to be used together with the BKGE results for spectral fitting).
+\end_layout
+
+\begin_layout Itemize
+There is a SYST_ERR (systematic error) of 15% and a STAT_ERR (statistical
+ error) of 1% reported in the produced files.
+\end_layout
+
+\begin_layout Bibliography
+\labelwidthstring References
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "bkge_ref"
+
+\end_inset
+
+V.
+ Vasileiou, 
+\emph on
+
+\begin_inset Quotes eld
+\end_inset
+
+A tool to estimate the Fermi Large Area Telescope background for short-duration
+ observations
+\emph default
+
+\begin_inset Quotes erd
+\end_inset
+
+, Astroparticle Physics, Volume 48, August 2013, Pages 61–74 http://www.sciencedi
+rect.com/science/article/pii/S0927650513001151 http://arxiv.org/abs/1307.4284
+\end_layout
+
+\begin_layout Bibliography
+\labelwidthstring References
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-1"
+
+\end_inset
+
+Fermi-LAT collaboration, 
+\begin_inset Quotes eld
+\end_inset
+
+
+\emph on
+The First Fermi LAT Gamma-Ray Burst Catalog
+\emph default
+
+\begin_inset Quotes erd
+\end_inset
+
+, accepted by Astrophysical Journal supplements, http://arxiv.org/abs/1303.2908
+\end_layout
+
+\end_body
+\end_document
