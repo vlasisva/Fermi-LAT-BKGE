@@ -154,7 +154,7 @@ string BKGE_NS::PlotBackground(string Interval_name, double MET, double DURATION
           fEst = TFile::Open(name);
           if (fEst->TestBit(TFile::kRecovered)) {
               printf("%s: file %s has not been closed ok. Probably job failed. Delete its folder and run again.\n",__FUNCTION__,name);
-              exit(1);
+              throw std::runtime_error("");
           }
           hExp = (TH1F*)fEst->Get("hExposure");
 
@@ -163,7 +163,7 @@ string BKGE_NS::PlotBackground(string Interval_name, double MET, double DURATION
           if (!hEst) {
              printf("no hCtsvsEnergy histogram in %s\n Delete that file and run again.",name); 
              fEst->ls();
-             exit(1);
+             throw std::runtime_error("");
           }
           
           hEst->SetLineColor(2);
@@ -220,25 +220,25 @@ string BKGE_NS::PlotBackground(string Interval_name, double MET, double DURATION
        fSig = TFile::Open(name);
        if (fSig->TestBit(TFile::kRecovered)) {
               printf("%s: file %s has not been closed ok. Probably job failed. Delete its folder and run again.\n",__FUNCTION__,name);
-              exit(1);
+              throw std::runtime_error("");
        }
 
           gBurst = (TGraphAsymmErrors*)fSig->Get("gSignal;1");
           if (!gBurst) {
                  printf("no gSignal in %s. Delete the file and try again.\n",name); 
                  fSig->ls();
-                 exit(1);
+                 throw std::runtime_error("");
           }
 
        histBurst =(TH1F*)fSig->Get("hCtsvsEnergy_Burst");
        hROISig = (TH1F*)fSig->Get("hROI");
-       if (!hROISig) {printf("no hROI in %s\n",name); fSig->ls(); exit(1);}
+       if (!hROISig) {printf("no hROI in %s\n",name); fSig->ls(); throw std::runtime_error("");}
        //compare ROI Radii and make sure they are the same
-       if (hROIEst->GetNbinsX()!=hROISig->GetNbinsX()) {printf("ROI Radii have different number of bins! %d %d\n",hROIEst->GetNbinsX(),hROISig->GetNbinsX()); exit(1);}
+       if (hROIEst->GetNbinsX()!=hROISig->GetNbinsX()) {printf("ROI Radii have different number of bins! %d %d\n",hROIEst->GetNbinsX(),hROISig->GetNbinsX()); throw std::runtime_error("");}
        for (int i=1;i<=hROIEst->GetNbinsX();i++) {
            if (fabs(hROIEst->GetBinContent(i)-hROISig->GetBinContent(i))>0.0001) {
                  printf("Different ROI RADII Est:%f SIG:%f bin:%d\n",hROIEst->GetBinContent(i),hROISig->GetBinContent(i),i);
-                 exit(1);
+                 throw std::runtime_error("");
            }
        }
        

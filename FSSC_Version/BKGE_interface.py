@@ -62,7 +62,11 @@ def CalculateBackground(start, stop , grb_trigger_time, RA, DEC, FT1, FT2, OUTPU
 
     if chatter>2: TOOLS.PrintConfig()
 
-    BKGE_NS.CalculateBackground("%.2f_%.2f/" %(start,stop), grb_trigger_time+start, duration, FT1,FT2,ResponseFunction,emin,emax,ebins,chatter,CalcResiduals)
+    try:
+       BKGE_NS.CalculateBackground("%.2f_%.2f/" %(start,stop), grb_trigger_time+start, duration, FT1,FT2,ResponseFunction,emin,emax,ebins,chatter,CalcResiduals)
+    except:
+       print("There was a problem with the BKGE. Aborting")
+       return
     ResultsFilename=""
     if EvaluateMaps:
         if chatter: print "%s: Counting actually detected events and plotting estimated background...\n" %myname
@@ -75,7 +79,12 @@ def CalculateBackground(start, stop , grb_trigger_time, RA, DEC, FT1, FT2, OUTPU
               if chatter>1: print "Calculating ROI Radius for an off-axis angle corresponding to the middle of the observation."
              
         ####
-        ResultsFilename = BKGE_NS.PlotBackground("%.2f_%.2f" %(start,stop), grb_trigger_time+start, duration, FT1,FT2,ResponseFunction,emin,emax,ebins,overwrite,chatter,MET_FOR_THETA)
+        try:        
+           ResultsFilename = BKGE_NS.PlotBackground("%.2f_%.2f" %(start,stop), grb_trigger_time+start, duration, FT1,FT2,ResponseFunction,emin,emax,ebins,overwrite,chatter,MET_FOR_THETA)
+        except:
+           print("There was a problem with the BKGE. Aborting")
+           return 
+
     
         ROOTFile=ROOT.TFile(ResultsFilename,"open")
         BKGE_NDET = float(ROOTFile.BKGE_NDET.GetTitle())
@@ -94,7 +103,13 @@ def MakeGtLikeTemplate(start, stop, grb_trigger_time, RA, DEC, FT1, FT2, OUTPUT_
        
     if chatter: print("Using a constant ROI radius of %d deg\n" %ROI_Radius)
     CalculateBackground(start,stop,grb_trigger_time, RA,DEC, FT1, FT2, OUTPUT_DIR, EvaluateMaps=False, ROI_Calculate=0, ROI_Radius=ROI_Radius,  GRB_NAME=GRB_NAME, chatter=chatter )
-    BKGE_NS.MakeGtLikeTemplate(ROI_Radius, OUTPUT_DIR+'/'+GRB_NAME+'/%.2f_%.2f/' %(start,stop), ResponseFunction, chatter)
+    try:    
+       BKGE_NS.MakeGtLikeTemplate(ROI_Radius, OUTPUT_DIR+'/'+GRB_NAME+'/%.2f_%.2f/' %(start,stop), ResponseFunction)
+    except:
+       print("There was a problem with the BKGE. Aborting")
+       return 1
+
+    return 0
 
 
 

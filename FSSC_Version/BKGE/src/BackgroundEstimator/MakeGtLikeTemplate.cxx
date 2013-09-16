@@ -46,7 +46,7 @@ int BKGE_NS::MakeGtLikeTemplate(float gtlike_ROI, string GRB_DIR, string DATACLA
      FILE *fgtlike = fopen(name,"w");
      if (hEstParticles[iParType]->GetNbinsX()!=ENERGY_BINS_DEFAULT) {
           printf("hEstParticles bins %d != default bins %d\n",hEstParticles[iParType]->GetNbinsX(),ENERGY_BINS_DEFAULT);
-	  exit(1);
+	  throw std::runtime_error("");
      }
      for (int ie=1;ie<=ENERGY_BINS_DEFAULT;ie++) {
         double Flux = hEstParticles[iParType]->GetBinContent(ie); //counts per bin

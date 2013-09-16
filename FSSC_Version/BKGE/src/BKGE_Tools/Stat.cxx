@@ -5,7 +5,10 @@
 
 
 double TOOLS::PoissonErrorBar(short int type, int events) {
- if (type!=0 && type!=1) {printf("%s: unknown error type %d\n",__FUNCTION__,type); exit(1);}
+ if (type!=0 && type!=1) {
+     printf("%s: unknown error type %d\n",__FUNCTION__,type); 
+     throw std::runtime_error("");
+ }
  //type==0 is bottom error bar, type==1 is top
  static bool first=true;
  static double ParError[2][3]; //0 is low, 1 is high

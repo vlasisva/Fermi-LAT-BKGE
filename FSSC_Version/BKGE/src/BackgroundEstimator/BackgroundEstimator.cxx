@@ -65,7 +65,7 @@ StartTime(0),EndTime(0),StopTime(0),TimeBins(0),BinSize(0.5),fResidualOverExposu
 
       sprintf(name,"%sResidual_Over_Exposure_%s_%.1f.root",DataDir.c_str(),DataClass.c_str(),Residuals_version);
       fResidualOverExposure = TFile::Open(name);
-      if (!fResidualOverExposure) {printf("%s: Data file %s cannot be read. Did you get the data files?\n",__FUNCTION__,name); exit(1);}
+      if (!fResidualOverExposure) {printf("%s: Data file %s cannot be read. Did you get the data files?\n",__FUNCTION__,name); throw std::runtime_error("");}
 
       if (sscanf(fResidualOverExposure->Get("Energy_Data")->GetTitle(),"%lf_%lf_%d",&Energy_Min_datafiles,&Energy_Max_datafiles,&Energy_Bins_datafiles)!=3)
           sscanf(fResidualOverExposure->Get("Energy_Data")->GetTitle(),"%lf-%lf-%d",&Energy_Min_datafiles,&Energy_Max_datafiles,&Energy_Bins_datafiles);
@@ -105,7 +105,7 @@ StartTime(0),EndTime(0),StopTime(0),TimeBins(0),BinSize(0.5),fResidualOverExposu
 
       sprintf(name,"%sRateFit_%s_%.1f.root",DataDir.c_str(),DataClass.c_str(),RateFit_version);
       fRateFit = TFile::Open(name);
-      if (!fRateFit) {printf("%s: Data file %s cannot be read. Did you get the data files?\n",__FUNCTION__,name); exit(1);}
+      if (!fRateFit) {printf("%s: Data file %s cannot be read. Did you get the data files?\n",__FUNCTION__,name); throw std::runtime_error("");}
       
       aversion=atof(fRateFit->Get("version")->GetTitle());
       if (aversion<RateFit_version) {
@@ -116,7 +116,7 @@ StartTime(0),EndTime(0),StopTime(0),TimeBins(0),BinSize(0.5),fResidualOverExposu
       
       sprintf(name,"%s/ThetaPhi_Fits_%s_%.1f.root",DataDir.c_str(),DataClass.c_str(),ThetaPhiFits_version);
       fThetaPhiFits = TFile::Open(name);
-      if (!fThetaPhiFits) {printf("%s: Data file %s cannot be read. Did you get the data files?\n",__FUNCTION__,name); exit(1);}
+      if (!fThetaPhiFits) {printf("%s: Data file %s cannot be read. Did you get the data files?\n",__FUNCTION__,name); throw std::runtime_error("");}
       aversion=atof(fThetaPhiFits->Get("version")->GetTitle());
 
       if (aversion<RateFit_version) {
@@ -125,7 +125,7 @@ StartTime(0),EndTime(0),StopTime(0),TimeBins(0),BinSize(0.5),fResidualOverExposu
       }
       if (aversion<2.0) {
            printf("%s: You cannot use the bkge with such old data files. Please download the new ones.. \n",__FUNCTION__);
-           exit(1);
+           throw std::runtime_error("");
       }
       
       fThetaPhiFits->Close();
@@ -142,7 +142,7 @@ StartTime(0),EndTime(0),StopTime(0),TimeBins(0),BinSize(0.5),fResidualOverExposu
             for (int iE=0;iE<Energy_Bins_datafiles;iE++) {
                sprintf(name,"RatiovsTime_%d",iE);
                pRatiovsTime[iE]=(TProfile*)(cCorr->GetPad(iE+1)->FindObject(name));
-               if (pRatiovsTime[iE]==NULL){ printf("%s: error reading TimeCorrectionFactors for %d\n",__FUNCTION__,iE); exit(1);}
+               if (pRatiovsTime[iE]==NULL){ printf("%s: error reading TimeCorrectionFactors for %d\n",__FUNCTION__,iE); throw std::runtime_error("");}
             }      
          }
      } 
@@ -183,7 +183,7 @@ bool BackgroundEstimator::PassesCuts(fitsfile * fptr, long int i, int format) {
     static int CTBClassLevel=0;
     if      (format==DATA_FORMAT_P6_OLD) fits_read_col (fptr,TINT,18,i, 1, 1, NULL,&CTBClassLevel, &anynul, &status);
     else if (format==DATA_FORMAT_P6_NEW) fits_read_col (fptr,TINT,15,i, 1, 1, NULL,&CTBClassLevel, &anynul, &status);
-    else {printf("%s: what is going on?\n",__FUNCTION__); exit(1);}
+    else {printf("%s: what is going on?\n",__FUNCTION__); throw std::runtime_error("");}
     if   (CTBClassLevel<MinCTBClassLevel) return false; //apply class cut
   }
 

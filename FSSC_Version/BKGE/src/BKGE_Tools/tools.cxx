@@ -13,20 +13,20 @@ void TOOLS::ProgressBar(const short int current, const short int max) {
 int TOOLS::GetClassMask(string DataClass) { //this is for the bitfield operations in P7
   if       (DataClass.find("TRANSIENT")!=string::npos) return 4;
   else if  (DataClass.find("SOURCE")  !=string::npos)  return 8;
-  else     {printf("%s:Unknown class %s\n",__FUNCTION__,DataClass.c_str()); exit(1);}
+  else     {printf("%s:Unknown class %s\n",__FUNCTION__,DataClass.c_str()); throw std::runtime_error("");}
 }
 
 int TOOLS::GetCTBClassLevel(string DataClass) {
   if       (DataClass.find("TRANSIENT")!=string::npos) return 1;
   else if  (DataClass.find("DIFFUSE")  !=string::npos) return 3;
-  else     {printf("%s:Unknown class %s\n",__FUNCTION__,DataClass.c_str()); exit(1);}
+  else     {printf("%s:Unknown class %s\n",__FUNCTION__,DataClass.c_str()); throw std::runtime_error("");}
 }
 
 string TOOLS::GetDataClassName_noConv(string DataClass) {
   if       (DataClass.find("TRANSIENT")!=string::npos) return "TRANSIENT";
   else if  (DataClass.find("DIFFUSE")!=string::npos)   return "DIFFUSE";
   else if  (DataClass.find("SOURCE")!=string::npos)    return "SOURCE";
-  else {printf("%s:Unknown class %s\n",__FUNCTION__,DataClass.c_str()); exit(1);}
+  else {printf("%s:Unknown class %s\n",__FUNCTION__,DataClass.c_str()); throw std::runtime_error("");}
 }
 
 int TOOLS::GetConversionType(string DataClass) {

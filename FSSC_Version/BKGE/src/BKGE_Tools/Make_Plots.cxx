@@ -82,16 +82,16 @@ int TOOLS::Make_Plots(double PreTime, double PostTime, double GRB_t0, string Plo
 
  
  if (FT2_START>hRAZenithvsTime.GetXaxis()->GetXmin()) {
-  printf("%s: FT2 file starts at time %f and we need data from an earlier time %f to make the plots\n",
-       __FUNCTION__,FT2_START,StartTime);
-  exit(1);
+  printf("%s: FT2 file starts at time %f and we need data from an earlier time %f to make the plots\n", __FUNCTION__,FT2_START,StartTime);
+  throw std::runtime_error("");
+  
  } 
 
  fits_read_col (fptr,TDOUBLE,col_stop,nrows, 1, 1, NULL,&FT2_END, &anynul, &status);
  if (FT2_END<hRAZenithvsTime.GetXaxis()->GetXmax()) {
       printf("%s: FT2 file stops at time %f and we need data up to a later time %f to make the plots\n",
            __FUNCTION__,FT2_END,StopTime);
-     exit(1);
+     throw std::runtime_error("");
  } 
 
  int NBins=hRAZenithvsTime.GetNbinsX();

@@ -2,10 +2,10 @@
 #include "include/BKGE_Tools.h"
 #include "rootIrfLoader/Aeff.h"
 
+//This code averages the contents of the exposure map by circularly scanning it over the ROI area. 
 void TOOLS::CalcExposure(TFile * fResults, float L_BURST, float B_BURST, float FT1ZenithTheta_Cut, TH1F * hExposure, string GRB_DIR, int verbosity){
 
   char name[1000];
-  //This code averages the contents of the exposure map by circularly scanning it over the ROI area. 
   TH2F * hExposureMap = NULL;
 
   CLHEP::Hep3Vector gBurst;
@@ -34,7 +34,7 @@ void TOOLS::CalcExposure(TFile * fResults, float L_BURST, float B_BURST, float F
      if (fResults->Get("GRB_NAME")==0) {
          printf("%s: You are using a custom binning and a background file generated with a previous version of the bkg estimator. \n",__FUNCTION__);
          printf("%s: Please use the default binning or regenerate your background files and try again \n",__FUNCTION__);
-         exit(1);
+         throw std::runtime_error("error");
      }
      GRB_NAME     = (((TNamed*)fResults->Get("GRB_NAME"))->GetTitle());
      FT1_FILE     = (((TNamed*)fResults->Get("FT1_FILE"))->GetTitle());
@@ -104,7 +104,7 @@ double TOOLS::CalcSpectrallyWeightedExposure(TH1F * hExposure, double a) {
        if (expo<0) {
 	    printf("%s: Something is wrong with the exposure value of bin %d (exp=%f) \n",__FUNCTION__,i,expo); 
 	    for (int ii=1;ii<=hExposure->GetNbinsX();ii++) printf("%d %e\n",i,hExposure->GetBinContent(i));
-	    exit (1);
+	    throw std::runtime_error("");
        }
        AEFF_SpectWgt_nom+=expo*weight;
        denom+=weight;

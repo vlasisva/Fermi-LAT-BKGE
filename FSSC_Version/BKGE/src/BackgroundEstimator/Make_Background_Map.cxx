@@ -53,7 +53,7 @@ int BackgroundEstimator::Make_Background_Map(string FT1_FILE, string FT2_FILE, s
      }
      printf("%s: Could not create file %s. Retrying.. \n",__FUNCTION__,ResultsFile.c_str());
      tries++;
-     if (tries>100){ printf("%s: Won't retry more.. exiting\n",__FUNCTION__); exit(1);}
+     if (tries>100){ printf("%s: Won't retry more.. exiting\n",__FUNCTION__);throw std::runtime_error("");}
   }
   
   
@@ -74,7 +74,7 @@ int BackgroundEstimator::Make_Background_Map(string FT1_FILE, string FT2_FILE, s
   if (status) {
 	printf("%s: Can't open fits file %s\n",__FUNCTION__,FT1_FILE.c_str());
         fits_report_error(stderr, status);
-	exit(1);
+	throw std::runtime_error("");
   }
   fits_movabs_hdu(fptr, 2, &hdutype, &status);
   fits_get_num_rows(fptr, &nrows, &status);      
@@ -92,10 +92,10 @@ int BackgroundEstimator::Make_Background_Map(string FT1_FILE, string FT2_FILE, s
   //fits_read_col (fptr,TDOUBLE,10,nrows, 1, 1, NULL,&File_t1, &anynul, &status);
   fits_close_file(fptr, &status);
 
-  if (Burst_t0<File_t0) {printf("%s: data files start at time %f and you requested an estimation for an earlier time (%f).\n",__FUNCTION__,File_t0,Burst_t0); exit(1);}
+  if (Burst_t0<File_t0) {printf("%s: data files start at time %f and you requested an estimation for an earlier time (%f).\n",__FUNCTION__,File_t0,Burst_t0); throw std::runtime_error("");}
   if (Burst_t1>File_t1) {
         printf("%s: data files end at time %f and you requested an estimation for a later time (%f).\n",__FUNCTION__,File_t1,Burst_t1);
-        exit(1);
+        throw std::runtime_error("");
   }
   //////////////////////////////////////////////
 
@@ -183,7 +183,7 @@ int BackgroundEstimator::Make_Background_Map(string FT1_FILE, string FT2_FILE, s
   TFile * fPlots = TFile::Open(name);
   Plots_Struct myPlots_Struct;
   myPlots_Struct.hMcIlwainLvsTime    = (TH1F*)fPlots->Get("hMcIlwainLvsTime");
-  if (!myPlots_Struct.hMcIlwainLvsTime) {printf("%s: Can't read plots from file %s\n",__FUNCTION__,name); exit(1);}
+  if (!myPlots_Struct.hMcIlwainLvsTime) {printf("%s: Can't read plots from file %s\n",__FUNCTION__,name); throw std::runtime_error("");}
   myPlots_Struct.hPtRazvsTime        = (TH1F*)fPlots->Get("hPtRazvsTime");
   myPlots_Struct.hPtDeczvsTime       = (TH1F*)fPlots->Get("hPtDeczvsTime");
   myPlots_Struct.hPtRaxvsTime        = (TH1F*)fPlots->Get("hPtRaxvsTime");
@@ -215,7 +215,7 @@ int BackgroundEstimator::Make_Background_Map(string FT1_FILE, string FT2_FILE, s
      //hSimulatedSky[ie]->Write(name);
 
      SimEvents = hSimulatedSky[ie]->GetEntries();
-     if (SimEvents<=0) {printf("%s: Problem simulating sky (return %f)\n",__FUNCTION__,hSimulatedSky[ie]->Integral()); exit(1);}
+     if (SimEvents<=0) {printf("%s: Problem simulating sky (return %f)\n",__FUNCTION__,hSimulatedSky[ie]->Integral()); throw std::runtime_error("");}
  
      /////////////////////////////////////////////////////
      hSimulatedSky[ie]->Divide(hSolidAngle);

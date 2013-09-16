@@ -64,7 +64,7 @@ int BackgroundEstimator::FillBackgroundHist(string GRB_DIR, TH1F * hROI, double 
           hMap[ie]->Add(htemp);
           htemp->Delete();
       }
-      else {printf("%s: Unknown particle-species type %d\n",__FUNCTION__,type); exit(1);}
+      else {printf("%s: Unknown particle-species type %d\n",__FUNCTION__,type); throw std::runtime_error("");}
   }
 
   //CALCULATE SPECTRAL TEMPLATE
@@ -124,7 +124,7 @@ int BackgroundEstimator::FillBackgroundHist(string GRB_DIR, TH1F * hROI, double 
       for (int i_new=1;i_new<=hBkg.GetNbinsX();i_new++) {  //Loop over energy bins
           double BKG;
           float CorrectionFactor=GimmeCorrectionFactor(i_new,MET);
-          if (fabs(CorrectionFactor)>0.3) {printf("%s: weird correction factor.. %f\n",__FUNCTION__,CorrectionFactor); exit(1);}
+          if (fabs(CorrectionFactor)>0.3) {printf("%s: weird correction factor.. %f\n",__FUNCTION__,CorrectionFactor); throw std::runtime_error("");}
           BKG = TOOLS::Integrate(hMap[i_new], L_BURST, B_BURST, hROI->GetBinContent(i_new))*(1-CorrectionFactor);
           if (BKG<=0 && type!=1) {
               printf("%s: A bkg bin (%d) was negative or zero. Setting it to the value of the previous bin.\n",__FUNCTION__,i_new);

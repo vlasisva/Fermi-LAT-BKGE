@@ -43,7 +43,10 @@ int TOOLS::Make_Burst_Plots(string DataClass, string FT1_FILE, string GRB_DIR, d
   
       int status = 0,anynul,hdutype;
       fits_open_file(&fptr, FT1_FILE.c_str(), READONLY, &status);
-      if (status)  { fits_report_error(stderr, status);printf("%s: Can't open file %s\n",__FUNCTION__,FT1_FILE.c_str()); exit(1);}
+      if (status)  { 
+         fits_report_error(stderr, status);printf("%s: Can't open file %s\n",__FUNCTION__,FT1_FILE.c_str()); 
+         throw std::runtime_error("fits error");
+      }
       
       fits_movabs_hdu(fptr, 2, &hdutype, &status);if (status) fits_report_error(stderr, status);
       long nrows;int ncols;
@@ -53,13 +56,13 @@ int TOOLS::Make_Burst_Plots(string DataClass, string FT1_FILE, string GRB_DIR, d
       if (DataClass.find("P7")!=string::npos) format=2;
       else if (ncols==22) format=1;
       else if (ncols==18) format=0;
-      else {printf("%s: Unknown FITS file format file %s ncols=%d\n",__FUNCTION__,name,ncols); exit(1);}
-      int col_time; fits_get_colnum(fptr, TRUE, "TIME", &col_time, &status);if (status) fits_report_error(stderr, status);
-      int col_conv_type;fits_get_colnum(fptr, TRUE, "CONVERSION_TYPE", &col_conv_type, &status);if (status) fits_report_error(stderr, status);
-      int col_energy;   fits_get_colnum(fptr, TRUE, "ENERGY", &col_energy, &status);if (status) fits_report_error(stderr, status);
-      int col_evclass;   fits_get_colnum(fptr, TRUE, "EVENT_CLASS", &col_evclass, &status);if (status) fits_report_error(stderr, status);
-      int col_ra;   fits_get_colnum(fptr, TRUE, "RA", &col_ra, &status); if (status) fits_report_error(stderr, status);
-      int col_dec;   fits_get_colnum(fptr, TRUE, "DEC", &col_dec, &status); if (status) fits_report_error(stderr, status);
+      else {printf("%s: Unknown FITS file format file %s ncols=%d\n",__FUNCTION__,name,ncols);                                                 throw std::runtime_error("error");}
+      int col_time; fits_get_colnum(fptr, TRUE, "TIME", &col_time, &status);                    if (status) {fits_report_error(stderr, status);throw std::runtime_error("error");}
+      int col_conv_type;fits_get_colnum(fptr, TRUE, "CONVERSION_TYPE", &col_conv_type, &status);if (status) {fits_report_error(stderr, status);throw std::runtime_error("error");}
+      int col_energy;   fits_get_colnum(fptr, TRUE, "ENERGY", &col_energy, &status);            if (status) {fits_report_error(stderr, status);throw std::runtime_error("error");}
+      int col_evclass;   fits_get_colnum(fptr, TRUE, "EVENT_CLASS", &col_evclass, &status);     if (status) {fits_report_error(stderr, status);throw std::runtime_error("error");}
+      int col_ra;   fits_get_colnum(fptr, TRUE, "RA", &col_ra, &status);                        if (status) {fits_report_error(stderr, status);throw std::runtime_error("error");}
+      int col_dec;   fits_get_colnum(fptr, TRUE, "DEC", &col_dec, &status);                     if (status) {fits_report_error(stderr, status);throw std::runtime_error("error");}
 
       /*
       int istart=-1;

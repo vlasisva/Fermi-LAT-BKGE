@@ -26,7 +26,10 @@ void TOOLS::CalculatePSF_ThetaPhi(TH1F* hROI, float theta, float phi, string Dat
   double LocalizationError      =Get("ROI_LOCALIZATION_ERROR");
 
   char name[1000];
-  if (theta>80) {printf("%s: Theta is >80, can't calculate ROI.\n",__FUNCTION__);exit(1);}
+  if (theta>80) {
+     printf("%s: Theta is >80, can't calculate ROI.\n",__FUNCTION__);
+     throw std::runtime_error("");
+  }
 
   string DataClassVersion     = GetDataClassVersion(DataClass);
   string DataClassName_noConv = GetDataClassName_noConv(DataClass);

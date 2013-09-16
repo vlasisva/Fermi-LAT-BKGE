@@ -23,6 +23,7 @@
 #include "fitsio.h"
 #include <vector>
 #include "TCanvas.h"
+#include <stdexcept>
 const double RAD_TO_DEG=57.2957795130;
 const double DEG_TO_RAD=0.01745329255;
 
