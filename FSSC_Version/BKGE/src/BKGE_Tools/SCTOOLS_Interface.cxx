@@ -13,9 +13,9 @@ void TOOLS::Run_gtltcube(string GRB_DIR, double TMin, double TMax, string FT2_FI
   pclose(pipe);
   //printf("--%s--\n",buffer);
   if (gtltcube_Filename=="") gtltcube_Filename="burst_ltCube.fits";
-  if (strcmp(buffer,"")) sprintf(buffer,"gtltcube scfile=%s evfile="" outfile=%s/%s dcostheta=0.025 binsize=1 zmax=%f chatter=4 phibins=2 tmin=%f tmax=%f",
+  if (strcmp(buffer,"")) sprintf(buffer,"gtltcube scfile=%s outfile=%s/%s dcostheta=0.025 binsize=1 zmax=%f chatter=4 phibins=2 tmin=%f tmax=%f evfile='' ",
      FT2_FILE.c_str(),GRB_DIR.c_str(),gtltcube_Filename.c_str(),FT1ZenithTheta_Cut,TMin,TMax);
-  else                  sprintf(buffer,"gtltcube scfile=%s evfile="" outfile=%s/%s dcostheta=0.025 binsz=1 zmax=%f chatter=4 phibins=2 tmin=%f tmax=%f",
+  else                  sprintf(buffer,"gtltcube scfile=%s outfile=%s/%s dcostheta=0.025 binsz=1 zmax=%f chatter=4 phibins=2 tmin=%f tmax=%f evfile='' ",
      FT2_FILE.c_str(),GRB_DIR.c_str(),gtltcube_Filename.c_str(),FT1ZenithTheta_Cut,TMin,TMax);
  
  if (verbosity>3 ) { 

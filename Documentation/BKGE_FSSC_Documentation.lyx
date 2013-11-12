@@ -136,7 +136,8 @@ gtlike
 \emph default
 source-model files (for LAT maximum likelihood analyses), and PHA I/II FITS
  files (for RMFit/XSpec spectral fitting analyses).
- It currently works with Pass7 reprocessed Transient-class events.
+ It currently works only with Pass7 reprocessed Transient-class events (P7REP_TR
+ANSIENT_V15).
  However, as new LAT data classes become available (e.g., Pass8), its functionalit
 y will be extended.
 \end_layout
@@ -1112,7 +1113,7 @@ Limits of the energy range of the produced background estimates and numbers
  of energy bins.
  For best accuracy do not use these parameter to use the default configuration
  present in the BKGE data files.
- For the P7 Transient class, the default is (50MeV - 150GeV, 20 bins).
+ For the P7REP Transient class, the default is (50MeV - 150GeV, 20 bins).
  
 \end_layout
 
@@ -1345,8 +1346,8 @@ ROI_Containment
 \begin_layout Plain Layout
 
 \size small
-Containment fraction of the P7TRANSIENT_V15 (P7REP_TRANSIENT) PSF used for
- calculating the ROI Radius (for ROI_Calculate==1)
+Containment fraction of the P7REP_TRANSIENT_V15 PSF used for calculating
+ the ROI Radius (for ROI_Calculate==1)
 \end_layout
 
 \end_inset
@@ -1923,7 +1924,7 @@ After less than a minute, the code finishes and produces the following output:
 \begin_layout LyX-Code
 
 \series bold
-BackgroundEstimator: Using P7TRANSIENT_V15 data class.
+BackgroundEstimator: Using P7REP_TRANSIENT_V15 data class.
 \end_layout
 
 \begin_layout LyX-Code
