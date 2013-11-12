@@ -29,7 +29,7 @@ void TOOLS::ReadGTI(vector <double>& GTI_Starts, vector <double>& GTI_Ends, stri
        fits_read_col (fptr,TDOUBLE,1,i, 1, 1, NULL,&agti0, &anynul, &status);
        fits_read_col (fptr,TDOUBLE,2,i, 1, 1, NULL,&agti1, &anynul, &status);
        if (agti1<StartTime || agti0>EndTime) continue; //skip external GTIs
-       if (fabs(agti1-agti0)<=1) {printf("%s: Skipping short GTI %f-%f dt=%f\n",__FUNCTION__,agti0,agti1,agti1-agti0); continue;}
+       if (fabs(agti1-agti0)<=0.01) {printf("%s: Skipping short GTI %f-%f dt=%f\n",__FUNCTION__,agti0,agti1,agti1-agti0); continue;}
        if (StartTime && agti0<StartTime) agti0=StartTime; //advance start of GTI to match starting time
        if (EndTime && agti1>EndTime)     agti1=EndTime;
        GTI_Starts.push_back(agti0);
