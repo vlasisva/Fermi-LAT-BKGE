@@ -169,6 +169,18 @@ This software is provided as is.
 om.
  If you have any problems compiling it, I can provide limited support based
  on my experience compiling it on Ubuntu Linux.
+ For bugs, please use this form: 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+https://github.com/vlasisva/Fermi-LAT-BKGE/issues
+\end_layout
+
+\end_inset
+
+ .
 \end_layout
 
 \begin_layout Standard
@@ -262,6 +274,18 @@ http://fermi.gsfc.nasa.gov/ssc/data/analysis/software/
 .
  The BKGE runs some of these tools (e.g., gtselect, gtexpcube2, gtltcube)
  as part of estimating the background.
+ Please make sure that the Science Tools version you are using knows about
+ the P7REP_TRANSIENT_V15 instrument response functions -- otherwise, the
+ BKGE will not run.
+ To check if this is the case, use the tool 
+\begin_inset Quotes eld
+\end_inset
+
+gtirf
+\begin_inset Quotes erd
+\end_inset
+
+ which lists the available IRFs.
 \end_layout
 
 \begin_layout Itemize
