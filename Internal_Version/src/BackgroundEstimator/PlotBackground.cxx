@@ -1,5 +1,5 @@
 //Author: Vlasios Vasileiou <vlasisva@gmail.com>
-//$Header: /nfs/slac/g/glast/ground/cvs/GRBAnalysis-scons/BackgroundEstimator/src/BackgroundEstimator/PlotBackground.cxx,v 1.1 2011/10/05 14:36:18 vlasisva Exp $
+//$Header: /nfs/slac/g/glast/ground/cvs/GRBAnalysis-scons/BackgroundEstimator/src/BackgroundEstimator/PlotBackground.cxx,v 1.2 2013/10/25 11:41:04 vlasisva Exp $
 #include "BackgroundEstimator/BackgroundEstimator.h"
 #include "TGraph.h"
 #include "TPaveText.h"
@@ -218,7 +218,7 @@ string BKGE_NS::PlotBackground(string Interval_name, double MET, double DURATION
 	    OverwriteResults=true;
             //Check if we have to make a listfile
             if (FT1_FILE=='^') FT1_FILE="@"+string(GRB_DIR)+"/fitslist.txt";
-            TOOLS::Make_Burst_Plots(DATACLASS, FT1_FILE, GRB_DIR,RA,DEC,MET,DURATION,hROIEst,0,0,0);
+            TOOLS::Make_Burst_Plots(DATACLASS, FT1_FILE, GRB_DIR,RA,DEC,MET,DURATION,hROIEst,0);
        }
        if (ftemp) fclose (ftemp);
 

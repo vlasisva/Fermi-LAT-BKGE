@@ -1,5 +1,5 @@
 // Author: Vlasios Vasileiou <vlasisva@gmail.com>
-//$Header: /nfs/slac/g/glast/ground/cvs/GRBAnalysis-scons/BackgroundEstimator/src/BKGE_Tools/CalculatePSF.cxx,v 1.3 2011/09/14 14:57:11 vlasisva Exp $
+//$Header: /nfs/slac/g/glast/ground/cvs/GRBAnalysis-scons/BackgroundEstimator/src/BKGE_Tools/CalculatePSF.cxx,v 1.4 2013/10/25 10:00:16 vlasisva Exp $
 #include "BackgroundEstimator/BKGE_Tools.h"
 #include "rootIrfLoader/rootIrfLoader/Psf.h"
 #include "rootIrfLoader/rootIrfLoader/Aeff.h"
@@ -19,20 +19,6 @@ void TOOLS::CalculatePSF(TH1F * hROI, double MET, string FT2_FILE, string DATACL
   }
   CalculatePSF_ThetaPhi(hROI, theta, phi, DATACLASS, Containment, MaxRadius);
 }
-
-/*
-TH1F* TOOLS::CalculatePSF(taClass, float Containment, float theta, float phi, float E_min, float E_max, float LocalizationError, float MAXRADIUS) {
- TH1F * hROI = (TH1F*)gROOT->Get("hPSF");
- if (hROI) {printf("Overwriting existing histogram hPSF\n"); hROI->Delete();}
- char name[1000];
- sprintf(name,"Point Spread Function %s Containment %.2f (theta/phi)=(%.2f/%.2f)deg",DataClass.c_str(),Containment,theta,phi);
- hROI= new TH1F("hPSF",name,100,log10(E_min),log10(E_max));
- hROI->GetXaxis()->SetTitle("log_{10}(E/MeV)");
- hROI->GetYaxis()->SetTitle("Point Spread Function (deg)");
- CalculatePSF(DataClass, hROI, Containment, LocalizationError, MAXRADIUS, theta, phi,1);
- return hROI;
-}
-*/
 
 void TOOLS::CalculatePSF_ThetaPhi(TH1F* hROI, float theta, float phi, string DataClass, float Containment, float MaxRadius) {
 

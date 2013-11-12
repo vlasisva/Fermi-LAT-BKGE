@@ -1,33 +1,30 @@
 //Author: Vlasios Vasileiou <vlasisva@gmail.com>
-//$Header: /nfs/slac/g/glast/ground/cvs/GRBAnalysis-scons/BackgroundEstimator/src/BackgroundEstimator/Calc_TimeCorrectionFactors.cxx,v 1.1 2011/10/05 14:36:17 vlasisva Exp $
+//$Header: /nfs/slac/g/glast/ground/cvs/GRBAnalysis-scons/BackgroundEstimator/src/BackgroundEstimator/Calc_TimeCorrectionFactors.cxx,v 1.3 2013/10/25 12:43:58 vlasisva Exp $
 
 #include "BackgroundEstimator/BackgroundEstimator.h"
 #include <algorithm>
 #include "TProfile.h"
 #include "TLine.h"
 #include "TGraphErrors.h"
-#include "TF1.h"
 
 void BKGE_NS::Calc_TimeCorrectionFactors(vector<string> GRB_folders, vector <double> METs, string Dataclass, double MinE, double MaxE, int NBins){
-gStyle->SetLineScalePS(0.01);
-  gStyle->SetPadTopMargin(0.07);
-  gStyle->SetPadLeftMargin(0.13);
-  gStyle->SetPadRightMargin(0.011);
-  gStyle->SetPadBottomMargin(0.15);
+ gStyle->SetLineScalePS(0.01);
+ gStyle->SetPadTopMargin(0.07);
+ gStyle->SetPadLeftMargin(0.13);
+ gStyle->SetPadRightMargin(0.011);
+ gStyle->SetPadBottomMargin(0.15);
 
-  const int DURATION=10000;
+ const int DURATION=10000;
  char name[1000],name2[1000];
 
  const double MinMET=*min_element(METs.begin(),METs.end())+DURATION/2;
  const double MaxMET=*max_element(METs.begin(),METs.end())+DURATION/2;
- printf("MIN MAX MET =%f %f\n",MinMET,MaxMET);
  const double lMinE = log10(MinE);
  const double lMaxE = log10(MaxE);
  const double dlMinE = (lMaxE-lMinE)/NBins;
 
  TProfile * hRatiovsTime[NBins];
  TGraph * gRatiovsTime[NBins];
- TF1 * fCorrection[NBins];
  for (int i=0;i<NBins;i++) {
     hRatiovsTime[i]= NULL;
  }
@@ -140,21 +137,6 @@ gStyle->SetLineScalePS(0.01);
      hRatiovsTime[iE]->Draw("CPSAME");
      
      l1->Draw("SAME");
-     
-     /*
-     //draw rocking angle change lines
-     const float max=gRatiovsTime[iE]->GetYaxis()->GetXmin();
-     const float min=gRatiovsTime[iE]->GetYaxis()->GetXmax();
-     printf("%f %f\n",min,max);
-     l1=new TLine(259546202.0,min,259546202.0,max); l1->SetLineColor(3);l1->Draw("SAME");
-     l1=new TLine(259719002.0,min,259719002.0,max); l1->SetLineColor(3); l1->Draw("SAME");
-     l1=new TLine(263347802.0,min,263347802.0,max); l1->SetLineColor(3);l1->Draw("SAME");
-     l1=new TLine(264470402.0,min,264470402.0,max); l1->SetLineColor(3); l1->Draw("SAME");
-     l1=new TLine(268791002.0,min,268791002.0,max); l1->SetLineColor(3);l1->Draw("SAME");
-     l1=new TLine(273628802.0,min,273628802.0,max); l1->SetLineColor(3); l1->Draw("SAME");
-     */
-     
-     
      
   }
     //Save Correction Factors

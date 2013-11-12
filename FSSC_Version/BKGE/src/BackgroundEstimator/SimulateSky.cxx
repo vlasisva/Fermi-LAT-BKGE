@@ -160,7 +160,7 @@ void BackgroundEstimator::SimulateSky(Plots_Struct myPlots_Struct, TH2F * hSimul
              printf("%s: GTI data start\end: %f %f\n",__FUNCTION__,GTI_Start[igti],GTI_End[igti]);
              throw std::runtime_error("");
       }
-      if (RockingAngle>70 & !showed_rocking_angle_warning) {
+      if (RockingAngle>70 && !showed_rocking_angle_warning) {
         printf("%s: WARNING - the rocking angle of the spacecraft exceeded 70degrees during your observation (ARR?). \n",__FUNCTION__);
         printf("For high rocking-angle observations, the contamination from the Earth limb becomes higher. \n");
         printf("Since the BKGE does not fully take into account such contamination, its final estimates may be erroneously lower\n");

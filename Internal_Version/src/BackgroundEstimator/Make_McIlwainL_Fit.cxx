@@ -1,5 +1,5 @@
 //Author: Vlasios Vasileiou <vlasisva@gmail.com>
-// $Header: /nfs/slac/g/glast/ground/cvs/GRBAnalysis-scons/BackgroundEstimator/src/BackgroundEstimator/Make_McIlwainL_Fit.cxx,v 1.3 2011/10/03 12:05:14 vlasisva Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/GRBAnalysis-scons/BackgroundEstimator/src/BackgroundEstimator/Make_McIlwainL_Fit.cxx,v 1.4 2013/10/25 10:44:22 vlasisva Exp $
 #include "BackgroundEstimator/BackgroundEstimator.h"
 
 ClassImp(BackgroundEstimator)

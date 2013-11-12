@@ -1,5 +1,5 @@
 //Author: Vlasios Vasileiou <vlasisva@gmail.com>
-// $Header: /nfs/slac/g/glast/ground/cvs/GRBAnalysis-scons/BackgroundEstimator/src/BackgroundEstimator/CalculateBackground.cxx,v 1.1 2011/10/05 14:36:17 vlasisva Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/GRBAnalysis-scons/BackgroundEstimator/src/BackgroundEstimator/CalculateBackground.cxx,v 1.2 2013/10/25 10:32:28 vlasisva Exp $
 #include "BackgroundEstimator/BackgroundEstimator.h"
 #include <sys/stat.h>
 #include <sys/types.h>

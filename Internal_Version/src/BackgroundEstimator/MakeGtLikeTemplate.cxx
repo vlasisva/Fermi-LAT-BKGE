@@ -1,14 +1,13 @@
 //author vlasisva@gmail.com
-//$Header: /nfs/slac/g/glast/ground/cvs/GRBAnalysis-scons/BackgroundEstimator/src/BackgroundEstimator/MakeGtLikeTemplate.cxx,v 1.1 2011/10/05 14:36:18 vlasisva Exp $
 #include "BackgroundEstimator/BackgroundEstimator.h"
 
-int BKGE_NS::MakeGtLikeTemplate(float gtlike_ROI, string GRB_DIR, string DATACLASS, double &GALGAMMAS_BKG, double &CR_EGAL_BKG, int verbosity) {
+int BKGE_NS::MakeGtLikeTemplate(float gtlike_ROI, string GRB_DIR, string DATACLASS) {
 
  const float error = TOOLS::Get("BKG_ESTIMATE_ERROR");
 
  char name[1000];
  const char BKG_COMPONENT[3][30]={"GALGAMMAS","CR_EGAL","TOTAL"};
- BackgroundEstimator * Est = new BackgroundEstimator(DATACLASS,-1,-1,-1,true,false);
+ BackgroundEstimator * Est = new BackgroundEstimator(DATACLASS,-1,-1,-1,false);
  
  const double ENERGY_MIN_DEFAULT =Est->Energy_Min_datafiles;
  const double ENERGY_MAX_DEFAULT =Est->Energy_Max_datafiles;
@@ -21,8 +20,8 @@ int BKGE_NS::MakeGtLikeTemplate(float gtlike_ROI, string GRB_DIR, string DATACLA
  TFile * fEstParticles[3];
  
  //Create and read estimated background component files
- if (Est->FillBackgroundHist(GRB_DIR, &hFlatROI,TOOLS::Get("GRB_RA"),TOOLS::Get("GRB_DEC"),1,verbosity)) return -1; //only gamma
- if (Est->FillBackgroundHist(GRB_DIR, &hFlatROI,TOOLS::Get("GRB_RA"),TOOLS::Get("GRB_DEC"),2,verbosity)) return -1; //CR + extragalactic
+ if (Est->FillBackgroundHist(GRB_DIR, &hFlatROI,TOOLS::Get("GRB_RA"),TOOLS::Get("GRB_DEC"),1)) return -1; //only gamma
+ if (Est->FillBackgroundHist(GRB_DIR, &hFlatROI,TOOLS::Get("GRB_RA"),TOOLS::Get("GRB_DEC"),2)) return -1; //CR + extragalactic
  for (int iParType=0;iParType<2;iParType++) {//here open only the two components (do not open the total root file since it is for a 95% ROI instead of flat gtlike one)
       sprintf(name,"%s/%s_bkg_%.0f_%.0f_%s.root",GRB_DIR.c_str(),Est->DataClass.c_str(),ENERGY_MIN_DEFAULT,ENERGY_MAX_DEFAULT,BKG_COMPONENT[iParType]);
       fEstParticles[iParType]= TFile::Open(name);
@@ -35,8 +34,7 @@ int BKGE_NS::MakeGtLikeTemplate(float gtlike_ROI, string GRB_DIR, string DATACLA
  //for iParType==2 (total), manually add the two components. I do not open the total bkg file since that is not for the glike ROI but some 95% ROI
  hEstParticles[2]=(TH1F*)hEstParticles[0]->Clone();
  hEstParticles[2]->Add(hEstParticles[1]);
- CR_EGAL_BKG  =hEstParticles[1]->Integral();
- GALGAMMAS_BKG=hEstParticles[0]->Integral();
+
  TH1F * hExposure = (TH1F*)fEstParticles[0]->Get("hExposure");
  if (!hExposure) {
     sprintf(name,"%s/%s_bkg_%.0f_%.0f_%s.root",GRB_DIR.c_str(),Est->DataClass.c_str(),ENERGY_MIN_DEFAULT,ENERGY_MAX_DEFAULT,BKG_COMPONENT[0]);

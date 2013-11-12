@@ -1,5 +1,5 @@
 // Author: Vlasios Vasileiou <vlasisva@gmail.com>
-// $Header: /nfs/slac/g/glast/ground/cvs/GRBAnalysis-scons/BackgroundEstimator/src/BKGE_Tools/CalcExposure.cxx,v 1.1.1.1 2011/06/02 19:41:04 jrb Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/GRBAnalysis-scons/BackgroundEstimator/src/BKGE_Tools/CalcExposure.cxx,v 1.2 2013/10/25 09:59:35 vlasisva Exp $
 #include "BackgroundEstimator/BKGE_Tools.h"
 #include "rootIrfLoader/rootIrfLoader/Aeff.h"
 
@@ -156,74 +156,4 @@ double TOOLS::CalcMeanEnergy(double MinEnergy,double PeakEnergy, double MaxEnerg
     return nom;
 }
 
-
-
-#include "TGraph.h"
-
-
-void TOOLS::PlotBand(float MinEnergy, float PeakEnergy, float MaxEnergy, float a,float b,double IntFlux) {
-
-    const double keV2erg=1.60217646e-9;
-    //const double erg2keV =1/keV2erg;
-
-    double MeanEnergy_keV=CalcMeanEnergy(MinEnergy,PeakEnergy,MaxEnergy,a,b);
-
-    if (MinEnergy>MaxEnergy || a<=b ) {
-       printf("%s: Check your input\n",__FUNCTION__);
-       return ;
-    } 
-    printf("%s: Integrated flux from %.1f to %.1f keV is %e erg/cm2/sec\n",__FUNCTION__,MinEnergy,MaxEnergy,IntFlux);
-    double integral=0;
-    const int steps=500;
-    const double dlE = (log10(MaxEnergy)-log10(MinEnergy))/steps;
-    const double lBreak = log10((a-b)*PeakEnergy);
-    double lE_point[steps],nufnu_point[steps],nufnu_point_erg[steps];
-    for (int iE=0;iE<steps;iE++) {
-        double lE=log10(MinEnergy)+(iE+0.5)*dlE;
-        double E=pow(10,lE); //in keV
-        double E_erg=E*keV2erg;
-        lE_point[iE]=E;
-        double Band_Ne;
-        if (lE<=lBreak && 0) {
-            Band_Ne=pow(float(E/100.),float(a))*exp(-E/PeakEnergy);
-        }
-        else {
-            Band_Ne=pow(float((a-b)*PeakEnergy/100.),float(a-b))*exp(b-a)*pow(float(E/100.),float(b));
-        }
-        double dE=pow(10,lE+0.5*dlE)-pow(10,lE-0.5*dlE);
-        integral+=Band_Ne*dE;//in photon/cm2/sec
-        nufnu_point[iE]=Band_Ne*E*dE;
-        nufnu_point_erg[iE]=Band_Ne*E*E_erg;
-        //printf("%d de=%f E=%e band=%e dlE=%e %e-%e\n",iE,dE,E,Band_Ne,dlE,pow(10,lE-0.5*dlE),pow(10,lE+0.5*dlE));
-    }
-    integral*=MeanEnergy_keV;
-    double Norm_erg=IntFlux/(integral);
-    double Norm    =IntFlux/integral;
-    for (int iE=0;iE<steps;iE++) {
-          nufnu_point_erg[iE]*=Norm_erg;
-          nufnu_point[iE]*=Norm;
-    }
-
-    TCanvas * c = new TCanvas("cBand","cBand");
-    c->Divide(1,2);
-    c->GetPad(1)->SetLogx();
-    c->GetPad(2)->SetLogx();
-//    c->GetPad(1)->SetLogy();
-//    c->GetPad(2)->SetLogy();
-
-    TGraph * gBand_keV = new TGraph(steps,lE_point,nufnu_point);
-    TGraph * gBand_erg = new TGraph(steps,lE_point,nufnu_point_erg);
-    char name[1000];
-    sprintf(name,"a=%.2f, b=%.2f, Peak Energy = %.0f keV Integral=%.2e erg/cm2/sec",a,b,PeakEnergy,IntFlux);
-    gBand_keV->GetXaxis()->SetTitle("Energy (KeV)");
-    gBand_erg->GetXaxis()->SetTitle("Energy (KeV)");
-    gBand_keV->GetYaxis()->SetTitle("#nu F_{#nu} (keV cm^{-2} s^{-1}");
-    gBand_erg->GetYaxis()->SetTitle("#nu F_{#nu} (erg cm^{-2} s^{-1}");
-    gBand_keV->SetTitle(name);
-    gBand_erg->SetTitle(name);
-    c->cd(1); gBand_keV->Draw("AP");
-    c->cd(2); gBand_erg->Draw("AP");
-
-
-}
 

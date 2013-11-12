@@ -1,5 +1,5 @@
 //Author: Vlasios Vasileiou <vlasisva@gmail.com>
-// $Header: /nfs/slac/g/glast/ground/cvs/GRBAnalysis-scons/BackgroundEstimator/src/BackgroundEstimator/Make_ThetaPhi_Fits.cxx,v 1.3 2011/10/03 12:05:14 vlasisva Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/GRBAnalysis-scons/BackgroundEstimator/src/BackgroundEstimator/Make_ThetaPhi_Fits.cxx,v 1.4 2013/10/25 10:45:53 vlasisva Exp $
 #include "BackgroundEstimator/BackgroundEstimator.h"
 
 ClassImp(BackgroundEstimator)
@@ -68,7 +68,7 @@ void BackgroundEstimator::Make_ThetaPhi_Fits(string FitsAllSkyFile){
   int ifile=0;
   int ibin;
   while (fscanf(ftemp,"%s",name)==1) {
-    printf("%d %s\r",ifile,name); fflush(0);
+    printf("%d\r",ifile); fflush(0);
     ifile++;
     long nrows;int ncols;
     int status=0,hdutype,anynul;
@@ -87,7 +87,7 @@ void BackgroundEstimator::Make_ThetaPhi_Fits(string FitsAllSkyFile){
     else {printf("%s: Unknown fits file format file %s class=%s\n",__FUNCTION__,name,DataClass.c_str()); exit(1);}
 
     for (long i=1;i<=nrows;i++) {
-        if (i%100000==0) {printf("%ld \ %ld   \r",i,nrows); fflush(0);} 
+
     
         double PtTime;
         fits_read_col (fptr,TDOUBLE,10,i, 1, 1, NULL,&PtTime, &anynul, &status);
@@ -104,9 +104,8 @@ void BackgroundEstimator::Make_ThetaPhi_Fits(string FitsAllSkyFile){
         double PtDecz = hPtDeczvsTime->GetBinContent(itimebin);
         double PtL,PtB;
         TOOLS::Galactic(PtRaz,PtDecz,&PtL,&PtB);
-        
+    
         if (fabs(PtB)>MinB && PassesCuts(fptr,i,format)) {
-        
             double FT1ZenithTheta,FT1Theta,FT1Phi;
             fits_read_col (fptr,TDOUBLE,8,i, 1, 1, NULL,&FT1ZenithTheta, &anynul, &status);
             fits_read_col (fptr,TDOUBLE,6,i, 1, 1, NULL,&FT1Theta, &anynul, &status);
@@ -115,10 +114,7 @@ void BackgroundEstimator::Make_ThetaPhi_Fits(string FitsAllSkyFile){
             double FT1Energy;
             fits_read_col (fptr,TDOUBLE,1,i, 1, 1, NULL,&FT1Energy, &anynul, &status);
             short ebin=Energy2Bin(FT1Energy);
-            if (ebin==0) {
-               printf("ebin=0? Ft1energy=%f i=%d \n",FT1Energy,i);
-               exit(1);
-            } 
+
             float RAZENITH  = hRAZenithvsTime->GetBinContent(itimebin);
             float DECZENITH = hDecZenithvsTime->GetBinContent(itimebin);
             float PtRax     = hPtRaxvsTime->GetBinContent(itimebin);
@@ -154,7 +150,7 @@ void BackgroundEstimator::Make_ThetaPhi_Fits(string FitsAllSkyFile){
    fits_close_file(fptr, &status);
   }    
   fclose (ftemp);
-  printf("done reading files\n");
+  
   for (int i=0;i<=hThetavsPhi_unrestricted->GetNbinsX();i++) {
      double sum1=0,sum2=0;
      for (int j=0;j<=hThetavsPhi_unrestricted->GetNbinsY();j++) {
@@ -168,14 +164,13 @@ void BackgroundEstimator::Make_ThetaPhi_Fits(string FitsAllSkyFile){
      } 
   }
   
-  printf("writing plots\n");
+  
   for (int ie=1;ie<=Energy_Bins_user;ie++) {
      hThetaPhiOctant[ie]->Write();
      hTheta_away[ie]->Write();
      hTheta_towards[ie]->Write();
   }
-  hPhi_towards->Write();
-  hPhi_away->Write();
+ 
   hThetavsPhi_unrestricted->Write();
   hThetavsPhi_restricted->Write();
   hZTheta_away->Write();
@@ -249,11 +244,11 @@ void MakeFits(string DataDir, string DataClass, int Energy_Bins_user, int nPhi, 
                 ((1/sqrt(sum))<0.05 || 
                 (theta_end>=50 && dtheta>10)||
                 (theta_end<50 && dtheta>20))) {
-                
+                printf("trigger!\n");
                 xx.push_back(hP_fine[iPhi]->GetXaxis()->GetBinUpEdge(iTheta));
 
                 yy.push_back(sum);
-                //printf("push xx=%f yy=%f\n",xx.back(),yy.back());
+                printf("push xx=%f yy=%f\n",xx.back(),yy.back());
                 sum=0;
                 theta_start=hP_fine[iPhi]->GetXaxis()->GetBinUpEdge(iTheta);
             }
@@ -262,7 +257,7 @@ void MakeFits(string DataDir, string DataClass, int Energy_Bins_user, int nPhi, 
          if (sum) {
             xx.push_back(hP_fine[iPhi]->GetXaxis()->GetXmax());
             yy.push_back(sum); 
-            //printf("push xx=%f yy=%f\n",xx.back(),yy.back());
+            printf("push xx=%f yy=%f\n",xx.back(),yy.back());
          }
          
          hP_coarse[iPhi]=new TH1F();
@@ -276,7 +271,7 @@ void MakeFits(string DataDir, string DataClass, int Energy_Bins_user, int nPhi, 
             float theta_rad_0=hP_coarse[iPhi]->GetXaxis()->GetBinLowEdge(i)*DEG_TO_RAD;         
             float theta_rad_1=hP_coarse[iPhi]->GetXaxis()->GetBinUpEdge(i)*DEG_TO_RAD;         
             double dc=cos(theta_rad_0)-cos(theta_rad_1);
-            //printf("dc=%f thetas=%f %f i=%d\n",dc,theta_rad_0/DEG_TO_RAD,theta_rad_1/DEG_TO_RAD,i);
+            printf("dc=%f thetas=%f %f i=%d\n",dc,theta_rad_0/DEG_TO_RAD,theta_rad_1/DEG_TO_RAD,i);
             hP_coarse_rescaled[iPhi]->SetBinContent(i,yy[i-1]/dc);
             hP_coarse_rescaled[iPhi]->SetBinError(i,sqrt(yy[i-1])/dc);
          }

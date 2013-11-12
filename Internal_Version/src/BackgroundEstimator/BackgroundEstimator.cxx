@@ -1,5 +1,5 @@
 //Author: Vlasios Vasileiou <vlasisva@gmail.com>
-//$Header: /nfs/slac/g/glast/ground/cvs/GRBAnalysis-scons/BackgroundEstimator/src/BackgroundEstimator/BackgroundEstimator.cxx,v 1.4 2011/10/03 12:05:14 vlasisva Exp $
+//$Header: /nfs/slac/g/glast/ground/cvs/GRBAnalysis-scons/BackgroundEstimator/src/BackgroundEstimator/BackgroundEstimator.cxx,v 1.9 2013/11/09 08:40:12 vlasisva Exp $
 #include "BackgroundEstimator/BackgroundEstimator.h"
 
 
@@ -18,26 +18,25 @@ BackgroundEstimator::~BackgroundEstimator()
 BackgroundEstimator::BackgroundEstimator(string aClass, double EMin, double EMax, int EBins, bool initialize, bool ShowLogo):
 Energy_Min_datafiles(0),Energy_Max_datafiles(0),Energy_Bins_datafiles(0),
 Energy_Min_user(EMin),Energy_Max_user(EMax),Energy_Bins_user(EBins),UsingDefaultBinning(true),
-DataClass(aClass),EstimatorVersion(3.0),Residuals_version(2.0),RateFit_version(2.0),ThetaPhiFits_version(2.0),EastWest_version(2.0),TimeCorrectionFactors_version(3.0),
+DataClass(aClass),FT1ZenithTheta_Cut(100),EstimatorVersion(4),Residuals_version(2.0),RateFit_version(2.0),ThetaPhiFits_version(2.0),EastWest_version(2.0),TimeCorrectionFactors_version(3.0),
 StartTime(0),EndTime(0),StopTime(0),TimeBins(0),BinSize(0.5),fResidualOverExposure(0),fRateFit(0),fThetaPhiFits(0),fCorrectionFactors(0)
 {
  
- if (ShowLogo) {
+  if (ShowLogo) {
    printf("*----------------------------------------------*\n");
-   printf("|               Background Estimator           |\n");
-   printf("|                 v%.1f 24/Jun/2013            |\n",EstimatorVersion);
+   printf("|           Background Estimator (public)      |\n");
+   printf("|              v%.0f September/2013               |\n",EstimatorVersion);
    printf("|                                              |\n");
    printf("| contact:     Vlasios Vasileiou               |\n");
    printf("|              vlasisva@gmail.com              |\n");
-   printf("| http://confluence.slac.stanford.edu/x/ApIeAg |\n");
+   printf("| http://arxiv.org/abs/1307.4284               |\n");
    printf("*----------------------------------------------*\n");
  }
 
   L_BINS = 720;
   B_BINS = 360;
   vector <string> VALID_CLASSES;
-  VALID_CLASSES.push_back("P6_V3_TRANSIENT");
-  VALID_CLASSES.push_back("P7TRANSIENT_V6");
+  VALID_CLASSES.push_back("P7TRANSIENT_V15");
 
   bool goodClass=false;
   for (unsigned int i=0;i<VALID_CLASSES.size();i++) {
@@ -171,7 +170,7 @@ void BackgroundEstimator::CreateDataFiles(string FitsAllSkyFilesList, string FT2
   fitsfile *fptr;
   int status = 0;	
   long nrows;
-  int hdutype,res,anynul;
+  int hdutype,anynul;
   FILE * ftemp;
 
   //1. PREPARE FILES  
@@ -180,7 +179,7 @@ void BackgroundEstimator::CreateDataFiles(string FitsAllSkyFilesList, string FT2
 
   //2.READ TIMES FROM GENERATED FILES    
   ftemp = fopen(FitsAllSkyFilesList.c_str(),"r");
-  res=fscanf(ftemp,"%s",name);
+  int res=fscanf(ftemp,"%s",name);
   status=0;
   fits_open_file(&fptr, name, READONLY, &status);
   if (status) fits_report_error(stderr, status);  status=0;
@@ -277,7 +276,7 @@ void BackgroundEstimator::CreateDataFiles(string FitsAllSkyFilesList, string FT2
                 char gtltcube_Filename[100];
                 sprintf(gtltcube_Filename,"ltCube_%s.fits",DataClass.c_str());
                 printf("%s: Creating exposure map %s...\n",__FUNCTION__,name); 
-                TOOLS::Run_gtexpcube(DataDir, StartTime, EndTime, FT2_FILE, DataClass, FT1ZenithTheta_Cut, name, Energy_Min_datafiles,Energy_Max_datafiles,Energy_Bins_datafiles, 5, "@"+FitsAllSkyFilesList, gtltcube_Filename);
+                TOOLS::Run_gtexpcube(DataDir, StartTime, EndTime, FT2_FILE, DataClass, FT1ZenithTheta_Cut, name, Energy_Min_datafiles,Energy_Max_datafiles, Energy_Bins_datafiles, 5, gtltcube_Filename);
                 //sprintf(buffer,"gtexpcube infile=%s/ltCube_%s.fits evfile=@%s cmfile=NONE outfile=%s irfs=%s nxpix=1 nypix=1 pixscale=1 coordsys=GAL xref=0 yref=0 axisrot=0 proj=CAR emin=%f emax=%f enumbins=%d bincalc=CENTER clobber=yes 2>&1",DataDir.c_str(),DataClass.c_str(),FitsAllSkyFilesList.c_str(),name,DataClass.c_str(),Energy_Min_datafiles,Energy_Max_datafiles,Energy_Bins_datafiles);
           } 
           else fclose(ftemp); 
