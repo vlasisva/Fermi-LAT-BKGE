@@ -31,18 +31,12 @@ void TOOLS::CalculatePSF_ThetaPhi(TH1F* hROI, float theta, float phi, string Dat
      throw std::runtime_error("");
   }
 
-  string DataClassVersion     = GetDataClassVersion(DataClass);
-  string DataClassName_noConv = GetDataClassName_noConv(DataClass);
-  int    ConversionType       = GetConversionType(DataClass);
+  rootIrfLoader::Psf PSF_FRONT  =  rootIrfLoader::Psf(DataClass+string("::FRONT"));
+  rootIrfLoader::Aeff EA_FRONT  =  rootIrfLoader::Aeff(DataClass+string("::FRONT"));
+  rootIrfLoader::Psf PSF_BACK   =  rootIrfLoader::Psf(DataClass+string("::FRONT"));
+  rootIrfLoader::Aeff EA_BACK   =  rootIrfLoader::Aeff(DataClass+string("::FRONT"));
 
-  if (DataClass.find("P7")==string::npos) sprintf(name,"%s%s::FRONT",DataClassVersion.c_str(),DataClassName_noConv.c_str());
-  else                                    sprintf(name,"P7%s_%s::FRONT",DataClassName_noConv.c_str(),DataClassVersion.c_str());
-  rootIrfLoader::Psf pFront     = rootIrfLoader::Psf(name);
-  rootIrfLoader::Aeff AeffFront = rootIrfLoader::Aeff(name);
-  if (DataClass.find("P7")==string::npos) sprintf(name,"%s%s::BACK",DataClassVersion.c_str(),DataClassName_noConv.c_str());
-  else                                    sprintf(name,"P7%s_%s::BACK",DataClassName_noConv.c_str(),DataClassVersion.c_str());
-  rootIrfLoader::Psf pBack     =  rootIrfLoader::Psf(name);
-  rootIrfLoader::Aeff AeffBack =  rootIrfLoader::Aeff(name);
+
 
   double act;
   sprintf(name,"%.0f%% Containment PSF",Containment*100);
@@ -51,52 +45,30 @@ void TOOLS::CalculatePSF_ThetaPhi(TH1F* hROI, float theta, float phi, string Dat
      E = pow(10,hROI->GetBinCenter(i));
      float radius=0;
      act=0;
-     if (ConversionType==0 ) {
-        while (pFront.angularIntegral(E,theta,phi,radius)<Containment) radius+=0.1;
-        radius-=0.1;
-        while (pFront.angularIntegral(E,theta,phi,radius)<Containment) radius+=0.01;
-        radius-=0.01;
-        while (pFront.angularIntegral(E,theta,phi,radius)<Containment) radius+=0.001;
-     }
-     else if (ConversionType==1) {
-        while (pBack.angularIntegral(E,theta,phi,radius)<Containment) radius+=0.1;
-        radius-=0.1;
-        while (pBack.angularIntegral(E,theta,phi,radius)<Containment) radius+=0.01;
-        radius-=0.01;
-        while (pBack.angularIntegral(E,theta,phi,radius)<Containment) radius+=0.001;
-     }
-     else {
-        double AEFront = AeffFront(E,theta,phi);
-        double AEBack  = AeffBack(E,theta,phi);
+        double AEFront = EA_FRONT(E,theta,phi);
+        double AEBack  = EA_BACK(E,theta,phi);
         if (AEFront<=0 || AEBack<=0) {printf("%s: Effective area weird! AEfron=%f aeback=%f theta=%f phi=%f E=%f theta=%f\n",__FUNCTION__,AEFront,AEBack,theta,phi,E,theta); exit(1);}
 
         do { 
-            float FrontInt=pFront.angularIntegral(E,theta,phi,radius);
-            pFront.angularIntegral(500,0,0,radius); //workaround of an SCTOOLS bug
-            float BackInt =pBack.angularIntegral(E,theta,phi,radius);
-            pBack.angularIntegral(500,0,0,radius); //workaround of an SCTOOLS bug
+            float FrontInt=PSF_FRONT.angularIntegral(E,theta,phi,radius);
+            float BackInt =PSF_BACK.angularIntegral(E,theta,phi,radius);
             act = (AEBack*BackInt + AEFront*FrontInt)/(AEBack+AEFront);
             radius+=0.1;
         } while (Containment>act);
         radius-=2*0.1;
         do {
-            float FrontInt=pFront.angularIntegral(E,theta,phi,radius);
-            pFront.angularIntegral(500,0,0,radius); //workaround of an SCTOOLS bug
-            float BackInt =pBack.angularIntegral(E,theta,phi,radius);
-            pBack.angularIntegral(500,0,0,radius); //workaround of an SCTOOLS bug
+            float FrontInt=PSF_FRONT.angularIntegral(E,theta,phi,radius);
+            float BackInt =PSF_BACK.angularIntegral(E,theta,phi,radius);
             act = (AEBack*BackInt + AEFront*FrontInt)/(AEBack+AEFront);
             radius+=0.01;
         } while (Containment>act);
         radius-=2*0.01;
         do {
-            float FrontInt=pFront.angularIntegral(E,theta,phi,radius);
-            pFront.angularIntegral(500,0,0,radius); //workaround of an SCTOOLS bug
-            float BackInt =pBack.angularIntegral(E,theta,phi,radius);
-            pBack.angularIntegral(500,0,0,radius); //workaround of an SCTOOLS bug
+            float FrontInt=PSF_FRONT.angularIntegral(E,theta,phi,radius);
+            float BackInt =PSF_BACK.angularIntegral(E,theta,phi,radius);
             act = (AEBack*BackInt + AEFront*FrontInt)/(AEBack+AEFront);
             radius+=0.001;
         } while (Containment>act);
-     }
 
      //printf("%d Energy=%f theta=%f phi=%f radius=%f ct=%f\n",i,E,theta,phi,radius,act);
      if (!(radius>0)) {printf("%s: ROI Radius invalid!! RADIUS=%f E=%f theta=%f phi=%f\n",__FUNCTION__,radius,E,theta,phi); exit(1);}
