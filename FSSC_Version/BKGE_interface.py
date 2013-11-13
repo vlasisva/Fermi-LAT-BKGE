@@ -13,7 +13,7 @@ print "Success!"
 from ROOT import TOOLS, BKGE_NS
 ROOT.gStyle.SetOptStat(0)
 TOOLS.Set("GRB_NAME","") #this is to create the datadir directory of the bkg estimator (kluge)
-TOOLS.Set("BKGE_DATADIR","BKGE_Datafiles/")
+TOOLS.Set("BKGE_DATADIR",os.path.join(os.path.dirname(__file__),"BKGE_Datafiles")+os.path.sep)
 ResponseFunction="P7TRANSIENT_V15"     #only P7TRANSIENT reprocessed class is currently publicly supported -- this is the same P7REP_TRANSIENT
 TOOLS.Set("BKG_ESTIMATE_ERROR",0.15)  #see associated publication for where this number can from
 
