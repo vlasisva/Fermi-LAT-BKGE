@@ -1,5 +1,5 @@
 // Author: Vlasios Vasileiou <vlasisva@gmail.com>
-// $Header: /nfs/slac/g/glast/ground/cvs/GRBAnalysis-scons/BackgroundEstimator/src/BKGE_Tools/Configuration.cxx,v 1.2 2011/09/23 16:30:10 vlasisva Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/GRBAnalysis-scons/BackgroundEstimator/src/BKGE_Tools/Configuration.cxx,v 1.3 2013/11/13 07:56:16 vlasisva Exp $
 #include "BackgroundEstimator/BKGE_Tools.h"
 
 void TOOLS::PrintConfig() {
@@ -10,9 +10,9 @@ void TOOLS::PrintConfig() {
 
 double TOOLS::Get(string name) {
   TDirectory * DataDir = gROOT->GetDirectory("/DataDir");
-  if (!DataDir) {printf("Can't find DataDir!\n"); exit(1);}
+  if (!DataDir) {printf("Can't find DataDir!\n"); throw std::runtime_error("");}
   TNamed * t=((TNamed*)DataDir->FindObject(name.c_str()));
-  if (!t) {printf("%s:Can't find TNamed %s \n",__FUNCTION__,name.c_str()); exit(1);}
+  if (!t) {printf("%s:Can't find TNamed %s \n",__FUNCTION__,name.c_str()); throw std::runtime_error("");}
   return atof(t->GetTitle());
 }
 
@@ -55,9 +55,9 @@ void TOOLS::Set(string name,string vals) {
 
 string TOOLS::GetS(string name) {
   TDirectory * DataDir = gROOT->GetDirectory("/DataDir");
-  if (!DataDir) {printf("Can't find DataDir!\n"); exit(1);}
+  if (!DataDir) {printf("Can't find DataDir!\n"); throw std::runtime_error("");}
   TNamed * t=((TNamed*)DataDir->FindObject(name.c_str()));
-  if (!t) {printf("%s:Can't find TNamed %s \n",__FUNCTION__,name.c_str()); exit(1);}
+  if (!t) {printf("%s:Can't find TNamed %s \n",__FUNCTION__,name.c_str()); throw std::runtime_error("");}
   return t->GetTitle();
 }
 

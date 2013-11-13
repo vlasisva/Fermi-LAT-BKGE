@@ -1,12 +1,12 @@
 //Author: Vlasios Vasileiou <vlasisva@gmail.com>
-// $Header: /nfs/slac/g/glast/ground/cvs/GRBAnalysis-scons/BackgroundEstimator/src/BKGE_Tools/Stat.cxx,v 1.2 2013/10/25 10:06:36 vlasisva Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/GRBAnalysis-scons/BackgroundEstimator/src/BKGE_Tools/Stat.cxx,v 1.3 2013/11/13 07:56:16 vlasisva Exp $
 #include "BackgroundEstimator/BKGE_Tools.h"
 #include "Math/ProbFuncMathCore.h"
 #include "Math/PdfFuncMathCore.h"
 
 
 double TOOLS::PoissonErrorBar(short int type, int events) {
- if (type!=0 && type!=1) {printf("%s: unknown error type %d\n",__FUNCTION__,type); exit(1);}
+ if (type!=0 && type!=1) {printf("%s: unknown error type %d\n",__FUNCTION__,type); throw std::runtime_error("");}
  //type==0 is bottom error bar, type==1 is top
  static bool first=true;
  static double ParError[2][3]; //0 is low, 1 is high

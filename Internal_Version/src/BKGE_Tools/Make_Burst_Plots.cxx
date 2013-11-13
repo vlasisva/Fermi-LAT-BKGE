@@ -43,7 +43,7 @@ int TOOLS::Make_Burst_Plots(string DataClass, string FT1_FILE, string GRB_DIR, d
   
       int status = 0,anynul,hdutype;
       fits_open_file(&fptr, FT1_FILE.c_str(), READONLY, &status);
-      if (status)  { fits_report_error(stderr, status);printf("%s: Can't open file %s\n",__FUNCTION__,FT1_FILE.c_str()); exit(1);}
+      if (status)  { fits_report_error(stderr, status);printf("%s: Can't open file %s\n",__FUNCTION__,FT1_FILE.c_str()); throw std::runtime_error("");}
       
       fits_movabs_hdu(fptr, 2, &hdutype, &status);if (status) fits_report_error(stderr, status);
       long nrows;int ncols;
@@ -53,7 +53,7 @@ int TOOLS::Make_Burst_Plots(string DataClass, string FT1_FILE, string GRB_DIR, d
       if (DataClass.find("P7")!=string::npos) format=2;
       else if (ncols==22) format=1;
       else if (ncols==18) format=0;
-      else {printf("%s: Unknown FITS file format file %s ncols=%d\n",__FUNCTION__,name,ncols); exit(1);}
+      else {printf("%s: Unknown FITS file format file %s ncols=%d\n",__FUNCTION__,name,ncols); throw std::runtime_error("");}
       int col_time; fits_get_colnum(fptr, TRUE, "TIME", &col_time, &status);if (status) fits_report_error(stderr, status);
       int col_conv_type;fits_get_colnum(fptr, TRUE, "CONVERSION_TYPE", &col_conv_type, &status);if (status) fits_report_error(stderr, status);
       int col_energy;   fits_get_colnum(fptr, TRUE, "ENERGY", &col_energy, &status);if (status) fits_report_error(stderr, status);
@@ -79,7 +79,7 @@ int TOOLS::Make_Burst_Plots(string DataClass, string FT1_FILE, string GRB_DIR, d
             fits_read_col (fptr,TDOUBLE,col_time,istart, 1, 1, NULL,&PtTime, &anynul, &status); if (status) fits_report_error(stderr, status);
             if (PtTime>GRB_t0) max=istart; //go down
             else {
-                if (istart==(nrows-1)) {printf("%s: istart==nrows? FT1 file seems to end before requested time interval\n",__FUNCTION__);exit(1);}
+                if (istart==(nrows-1)) {printf("%s: istart==nrows? FT1 file seems to end before requested time interval\n",__FUNCTION__);throw std::runtime_error("");}
                 fits_read_col (fptr,TDOUBLE,col_time,istart+1, 1, 1, NULL,&PtTime, &anynul, &status);if (status) fits_report_error(stderr, status);
                 if (PtTime>GRB_t0) {istart++; break;} //found!
                 else min=istart;//go up

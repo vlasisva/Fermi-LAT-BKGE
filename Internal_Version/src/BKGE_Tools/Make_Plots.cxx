@@ -84,14 +84,14 @@ int TOOLS::Make_Plots(double PreTime, double PostTime, double GRB_t0, string Plo
  if (FT2_START>hRAZenithvsTime.GetXaxis()->GetXmin()) {
   printf("%s: FT2 file starts at time %f and we need data from an earlier time %f to make the plots\n",
        __FUNCTION__,FT2_START,StartTime);
-  exit(1);
+  throw std::runtime_error("");
  } 
 
  fits_read_col (fptr,TDOUBLE,col_stop,nrows, 1, 1, NULL,&FT2_END, &anynul, &status);
  if (FT2_END<hRAZenithvsTime.GetXaxis()->GetXmax()) {
       printf("%s: FT2 file stops at time %f and we need data up to a later time %f to make the plots\n",
            __FUNCTION__,FT2_END,StopTime);
-     exit(1);
+     throw std::runtime_error("");
  } 
 
  int NBins=hRAZenithvsTime.GetNbinsX();
@@ -321,7 +321,7 @@ void Interpolate(TH1F* hist,bool aRA,int verbosity) {
     for (int i=hist->GetNbinsX();i>0;i--) {    //search for last filled bin in the histo
       if (hist->GetBinContent(i)) {ilast=i; break;}
     }
-    if (ilast==0) {printf("%s: ilast is still zero? \n",__FUNCTION__); hist->Write(); exit(1);}
+    if (ilast==0) {printf("%s: ilast is still zero? \n",__FUNCTION__); hist->Write(); throw std::runtime_error("");}
     for (int i=ilast-1;i<=ilast;i++) { //just get two bins and extrapolate
         if ((Y[nel]=hist->GetBinContent(i))!=0) {
            X[nel]=i;
@@ -375,7 +375,7 @@ void CalculateRockingAngle(TH1F* hRockingAnglevsTime, TH1F* hPtRazvsTime, TH1F* 
       SCZenith = astro::SkyDir(RA_ZENITH,DEC_ZENITH,astro::SkyDir::EQUATORIAL);
       double tol=SCx.difference(SCz)/DEG_TO_RAD-90;
       if (fabs(tol)>2) { printf("%s: Accuracy of plots low.. %d %lf %f\n",__FUNCTION__,i,hPtRazvsTime->GetBinCenter(i),tol); }
-      //if (fabs(tol)>3) exit(1);
+      //if (fabs(tol)>3) throw std::runtime_error("");
       hRockingAnglevsTime->SetBinContent(i,SCZenith.difference(SCz)/DEG_TO_RAD);
   }
 }

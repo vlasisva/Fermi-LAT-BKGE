@@ -1,5 +1,5 @@
 //Author: Vlasios Vasileiou <vlasisva@gmail.com>
-// $Header: /nfs/slac/g/glast/ground/cvs/GRBAnalysis-scons/BackgroundEstimator/src/BKGE_Tools/ReadExposure.cxx,v 1.1.1.1 2011/06/02 19:41:04 jrb Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/GRBAnalysis-scons/BackgroundEstimator/src/BKGE_Tools/ReadExposure.cxx,v 1.2 2013/11/13 07:56:16 vlasisva Exp $
 #include "fitsio.h" 
 #include "BackgroundEstimator/BKGE_Tools.h"
 //#define DEBUG
@@ -27,7 +27,7 @@ void TOOLS::ReadExposureMap(string ExposureFilename, TH2F * hExposure, int ie, c
     /* read the NAXIS1 and NAXIS2 keyword to get image size */
     char name[]="NAXIS";
     if ( fits_read_keys_lng(fptr,name, 1, 2, naxes, &nfound, &status) )  printerror( status );
-    if (naxes[0]>=buffsize) {printf("%s: Please increase buffer size\n",__FUNCTION__);exit(1);}
+    if (naxes[0]>=buffsize) {printf("%s: Please increase buffer size\n",__FUNCTION__);throw std::runtime_error("");}
     npixels  = naxes[0] * naxes[1];         /* number of pixels in the image */
     fpixel   = 1+(ie-1)*npixels;
     nullval  = 0;                /* don't check for null values in the image */

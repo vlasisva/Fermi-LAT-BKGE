@@ -1,5 +1,5 @@
 // Author: Vlasios Vasileiou <vlasisva@gmail.com>
-// $Header: /nfs/slac/g/glast/ground/cvs/GRBAnalysis-scons/BackgroundEstimator/src/BKGE_Tools/CalcExposure.cxx,v 1.2 2013/10/25 09:59:35 vlasisva Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/GRBAnalysis-scons/BackgroundEstimator/src/BKGE_Tools/CalcExposure.cxx,v 1.3 2013/11/13 07:56:15 vlasisva Exp $
 #include "BackgroundEstimator/BKGE_Tools.h"
 #include "rootIrfLoader/rootIrfLoader/Aeff.h"
 
@@ -35,7 +35,7 @@ void TOOLS::CalcExposure(TFile * fResults, float L_BURST, float B_BURST, float F
      if (fResults->Get("GRB_NAME")==0) {
          printf("%s: You are using a custom binning and a background file generated with a previous version of the bkg estimator. \n",__FUNCTION__);
          printf("%s: Please use the default binning or regenerate your background files and try again \n",__FUNCTION__);
-         exit(1);
+         throw std::runtime_error("");
      }
      GRB_NAME     = (((TNamed*)fResults->Get("GRB_NAME"))->GetTitle());
      FT1_FILE     = (((TNamed*)fResults->Get("FT1_FILE"))->GetTitle());
@@ -66,7 +66,7 @@ void TOOLS::CalcExposure(TFile * fResults, float L_BURST, float B_BURST, float F
          //dphi step changes with theta so that we don't sample as finely near the pole (theta=0)
          //this can be optimized more
          int phisteps= (int)abs(200*sin(theta_local)/sin(12*TMath::Pi()/180.));
-         //if (phisteps==0 && theta_local) {printf("%s: phisteps=0? theta_local=%f\n",__FUNCTION__,theta_local); exit(1);}
+         //if (phisteps==0 && theta_local) {printf("%s: phisteps=0? theta_local=%f\n",__FUNCTION__,theta_local); throw std::runtime_error("");}
          float dphi = 2*TMath::Pi()/phisteps;
          //printf("%f %f\n",theta_local/DEG_TO_RAD,dphi/DEG_TO_RAD);
          for (float phi_local=0;phi_local<2*TMath::Pi();phi_local+=dphi) {
@@ -110,7 +110,7 @@ double TOOLS::CalcSpectrallyWeightedExposure(TH1F * hExposure, double a) {
        AEFF_SpectWgt_nom+=expo*weight;
        denom+=weight;
     }
-    if (AEFF_SpectWgt_nom<0 || denom<=0) {printf("%s: Something's wrong nom=%f denom=%f\n",__FUNCTION__,AEFF_SpectWgt_nom,denom); exit(1);}
+    if (AEFF_SpectWgt_nom<0 || denom<=0) {printf("%s: Something's wrong nom=%f denom=%f\n",__FUNCTION__,AEFF_SpectWgt_nom,denom); throw std::runtime_error("");}
     AEFF_SpectWgt_nom/=denom;
     return AEFF_SpectWgt_nom;
 }

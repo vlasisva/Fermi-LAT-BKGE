@@ -1,5 +1,5 @@
 //Author: Vlasios Vasileiou <vlasisva@gmail.com>
-// $Header: /nfs/slac/g/glast/ground/cvs/GRBAnalysis-scons/BackgroundEstimator/src/BackgroundEstimator/Make_McIlwainL_Fit.cxx,v 1.4 2013/10/25 10:44:22 vlasisva Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/GRBAnalysis-scons/BackgroundEstimator/src/BackgroundEstimator/Make_McIlwainL_Fit.cxx,v 1.5 2013/11/13 07:56:16 vlasisva Exp $
 #include "BackgroundEstimator/BackgroundEstimator.h"
 
 ClassImp(BackgroundEstimator)
@@ -12,7 +12,7 @@ void BackgroundEstimator::Make_McIlwainL_Fits(string FitsAllSkyFile){
   TH1F* hPtDeczvsTime    = (TH1F*)fPlots->Get("hPtDeczvsTime;1");
   TH1F* hMcIlwainLvsTime = (TH1F*)fPlots->Get("hMcIlwainLvsTime;1");
   TH1F* hRockingAnglevsTime = (TH1F*)fPlots->Get("hRockingAnglevsTime;1");
-  if (!hPtRazvsTime || !hPtDeczvsTime || !hMcIlwainLvsTime) {printf("%s: Can't read plots from file %s\n",__FUNCTION__,name); exit(1);}
+  if (!hPtRazvsTime || !hPtDeczvsTime || !hMcIlwainLvsTime) {printf("%s: Can't read plots from file %s\n",__FUNCTION__,name); throw std::runtime_error("");}
 
   
   TH1F * hTheta_away[Energy_Bins_user+1];
@@ -21,7 +21,7 @@ void BackgroundEstimator::Make_McIlwainL_Fits(string FitsAllSkyFile){
   for (int i=1;i<=Energy_Bins_user;i++) {
     sprintf(name,"hTheta_away_%d",i);
     hTheta_away[i]=(TH1F*)fThetaPhi_Fits->Get(name);
-    if (!hTheta_away[i]) {printf("%s: no htheta_away_%d\n",__FUNCTION__,i); exit(1);}
+    if (!hTheta_away[i]) {printf("%s: no htheta_away_%d\n",__FUNCTION__,i); throw std::runtime_error("");}
   }
   
   //To avoid contamination from galactic-plane gamma-rays, only events when the LAT is pointing at a |GalacticLatitude|>B_Cut are considered.
@@ -106,11 +106,11 @@ void BackgroundEstimator::Make_McIlwainL_Fits(string FitsAllSkyFile){
      else if (DataClass.find("P6")!=string::npos){
         if      (ncols==22) format=DATA_FORMAT_P6_NEW;
         else if (ncols==18) format=DATA_FORMAT_P6_OLD; 
-        else {printf("%s: unknown format file %s ncols=%d class=%s\n",__FUNCTION__,name,ncols,DataClass.c_str()); exit(1);}
+        else {printf("%s: unknown format file %s ncols=%d class=%s\n",__FUNCTION__,name,ncols,DataClass.c_str()); throw std::runtime_error("");}
      }
-     else {printf("%s: Unknown fits file format file %s class=%s\n",__FUNCTION__,name,DataClass.c_str()); exit(1);}
+     else {printf("%s: Unknown fits file format file %s class=%s\n",__FUNCTION__,name,DataClass.c_str()); throw std::runtime_error("");}
  
-     if (nrows<=0) {printf("%s: nrows=%ld\n", __FUNCTION__,nrows); exit(1);}
+     if (nrows<=0) {printf("%s: nrows=%ld\n", __FUNCTION__,nrows); throw std::runtime_error("");}
      for (long int i=1;i<=nrows;i++) {
          
          double PtTime;

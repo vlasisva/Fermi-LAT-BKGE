@@ -1,7 +1,7 @@
 // Author: Vlasios Vasileiou <vlasisva@gmail.com>
 #include "BackgroundEstimator/BKGE_Tools.h"
-#include "rootIrfLoader/Psf.h"
-#include "rootIrfLoader/Aeff.h"
+#include "rootIrfLoader/rootIrfLoader/Psf.h"
+#include "rootIrfLoader/rootIrfLoader/Aeff.h"
 #include <algorithm>
 
 void TOOLS::CalculatePSF(TH1F * hROI, double MET, string FT2_FILE, string DATACLASS, float Containment, float MaxRadius) {
@@ -47,7 +47,7 @@ void TOOLS::CalculatePSF_ThetaPhi(TH1F* hROI, float theta, float phi, string Dat
      act=0;
         double AEFront = EA_FRONT(E,theta,phi);
         double AEBack  = EA_BACK(E,theta,phi);
-        if (AEFront<=0 || AEBack<=0) {printf("%s: Effective area weird! AEfron=%f aeback=%f theta=%f phi=%f E=%f theta=%f\n",__FUNCTION__,AEFront,AEBack,theta,phi,E,theta); exit(1);}
+        if (AEFront<=0 || AEBack<=0) {printf("%s: Effective area weird! AEfron=%f aeback=%f theta=%f phi=%f E=%f theta=%f\n",__FUNCTION__,AEFront,AEBack,theta,phi,E,theta); throw std::runtime_error("");}
 
         do { 
             float FrontInt=PSF_FRONT.angularIntegral(E,theta,phi,radius);
@@ -71,7 +71,7 @@ void TOOLS::CalculatePSF_ThetaPhi(TH1F* hROI, float theta, float phi, string Dat
         } while (Containment>act);
 
      //printf("%d Energy=%f theta=%f phi=%f radius=%f ct=%f\n",i,E,theta,phi,radius,act);
-     if (!(radius>0)) {printf("%s: ROI Radius invalid!! RADIUS=%f E=%f theta=%f phi=%f\n",__FUNCTION__,radius,E,theta,phi); exit(1);}
+     if (!(radius>0)) {printf("%s: ROI Radius invalid!! RADIUS=%f E=%f theta=%f phi=%f\n",__FUNCTION__,radius,E,theta,phi); throw std::runtime_error("");}
      hROI->SetBinContent(i,std::min(sqrt(pow(radius,2)+pow(LocalizationError,2)),(double)MaxRadius));
   }
 }

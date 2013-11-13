@@ -1,5 +1,5 @@
 //Author: Vlasios Vasileiou <vlasisva@gmail.com>
-// $Header: /nfs/slac/g/glast/ground/cvs/GRBAnalysis-scons/BackgroundEstimator/src/BackgroundEstimator/Make_ThetaPhi_Fits.cxx,v 1.4 2013/10/25 10:45:53 vlasisva Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/GRBAnalysis-scons/BackgroundEstimator/src/BackgroundEstimator/Make_ThetaPhi_Fits.cxx,v 1.5 2013/11/13 07:56:16 vlasisva Exp $
 #include "BackgroundEstimator/BackgroundEstimator.h"
 
 ClassImp(BackgroundEstimator)
@@ -73,7 +73,7 @@ void BackgroundEstimator::Make_ThetaPhi_Fits(string FitsAllSkyFile){
     long nrows;int ncols;
     int status=0,hdutype,anynul;
     fits_open_file(&fptr, name, READONLY, &status);
-    if (status) {printf("%s: error opening file %s\n",__FUNCTION__,name); exit(1);}
+    if (status) {printf("%s: error opening file %s\n",__FUNCTION__,name); throw std::runtime_error("");}
     fits_movabs_hdu(fptr, 2, &hdutype, &status);
     fits_get_num_rows(fptr, &nrows, &status);
     fits_get_num_cols(fptr, &ncols, &status);
@@ -82,9 +82,9 @@ void BackgroundEstimator::Make_ThetaPhi_Fits(string FitsAllSkyFile){
     else if (DataClass.find("P6")!=string::npos){
         if      (ncols==22) format=DATA_FORMAT_P6_NEW;
         else if (ncols==18) format=DATA_FORMAT_P6_OLD;
-        else {printf("%s: unknown format file %s ncols=%d class=%s\n",__FUNCTION__,name,ncols,DataClass.c_str()); exit(1);}
+        else {printf("%s: unknown format file %s ncols=%d class=%s\n",__FUNCTION__,name,ncols,DataClass.c_str()); throw std::runtime_error("");}
     }
-    else {printf("%s: Unknown fits file format file %s class=%s\n",__FUNCTION__,name,DataClass.c_str()); exit(1);}
+    else {printf("%s: Unknown fits file format file %s class=%s\n",__FUNCTION__,name,DataClass.c_str()); throw std::runtime_error("");}
 
     for (long i=1;i<=nrows;i++) {
 

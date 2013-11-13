@@ -4,7 +4,7 @@ void TOOLS::ReadGTI(vector <double>& GTI_Starts, vector <double>& GTI_Ends, stri
 
 
  FILE* ftemp = fopen(FitsAllSkyFile.c_str(),"r");
- if (!ftemp){ printf("%s: file %s does not exist\n",__FUNCTION__,FitsAllSkyFile.c_str()); exit(1);}
+ if (!ftemp){ printf("%s: file %s does not exist\n",__FUNCTION__,FitsAllSkyFile.c_str()); throw std::runtime_error("");}
  
  fitsfile *fptr;
  vector <string> FitsFiles;
@@ -18,7 +18,7 @@ void TOOLS::ReadGTI(vector <double>& GTI_Starts, vector <double>& GTI_Ends, stri
  for (int i=0;i<FitsFiles.size();i++) {    
     int status=0,hdutype,anynul;
     fits_open_file(&fptr, FitsFiles[i].c_str(), READONLY, &status);
-    if (status) {printf("%s: error opening file %s\n",__FUNCTION__,FitsFiles[i].c_str()); exit(1);}
+    if (status) {printf("%s: error opening file %s\n",__FUNCTION__,FitsFiles[i].c_str()); throw std::runtime_error("");}
 
     //Read GTIs 
     long int GTIs;

@@ -29,6 +29,7 @@ void prettyroot(){
 
   gStyle->SetLegendBorderSize(1);
   gStyle->SetFrameBorderMode(0);
+  gStyle->SetLineScalePS(1);
   gStyle->SetCanvasBorderMode(0);     // turn off canvas borders. 
   gStyle->SetPadBorderMode(0);
   gStyle->SetPaintTextFormat("5.2f");  // What precision to put numbers if plotted with "TEXT". 

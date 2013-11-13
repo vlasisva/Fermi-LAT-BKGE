@@ -1,5 +1,5 @@
 //Author: Vlasios Vasileiou <vlasisva@gmail.com>
-//$Header: /nfs/slac/g/glast/ground/cvs/GRBAnalysis-scons/BackgroundEstimator/BackgroundEstimator/BKGE_Tools.h,v 1.6 2013/10/25 12:51:12 vlasisva Exp $
+//$Header: /nfs/slac/g/glast/ground/cvs/GRBAnalysis-scons/BackgroundEstimator/BackgroundEstimator/BKGE_Tools.h,v 1.7 2013/11/13 07:56:15 vlasisva Exp $
 
 #ifndef _BKGE_Tools_H
 #define _BKGE_Tools_H
@@ -23,6 +23,7 @@
 #include "fitsio.h"
 #include <vector>
 #include "TCanvas.h"
+#include <stdexcept>
 const double RAD_TO_DEG=57.2957795130;
 const double DEG_TO_RAD=0.01745329255;
 

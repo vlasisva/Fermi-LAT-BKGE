@@ -63,7 +63,7 @@ void BackgroundEstimator::SimulateSky(Plots_Struct myPlots_Struct, TH2F * hSimul
         sprintf(name2,"cc_%d",iEnergy);
         sprintf(name,"hProjection_Coarse_rescaled_%d_%d",iPhi,iEnergy);
         hThetaPhi_rescaled[iEnergy][iPhi] = (TH1F*)(((TCanvas*)fThetaPhi_Fits->Get(name2))->GetPad(iPhi)->FindObject(name));
-        if (!hThetaPhi_rescaled[iEnergy][iPhi]) {printf("%s: Can't find %s in %s\n",__FUNCTION__,name,name2); exit(1);}
+        if (!hThetaPhi_rescaled[iEnergy][iPhi]) {printf("%s: Can't find %s in %s\n",__FUNCTION__,name,name2); throw std::runtime_error("");}
      }
   }
   
@@ -158,7 +158,7 @@ void BackgroundEstimator::SimulateSky(Plots_Struct myPlots_Struct, TH2F * hSimul
       if (RockingAngle<=0) {
              printf("%s: rocking angle weird rock=%f i_0=%d time=%f\n",__FUNCTION__,RockingAngle, i_0,TIME_0); 
              printf("%s: GTI data start\end: %f %f\n",__FUNCTION__,GTI_Start[igti],GTI_End[igti]);
-             exit(1);
+             throw std::runtime_error("");
       }
       if (RockingAngle>70 && !showed_rocking_angle_warning) {
         printf("%s: WARNING - the rocking angle of the spacecraft exceeded 70degrees during your observation (ARR?). \n",__FUNCTION__);
@@ -172,14 +172,14 @@ void BackgroundEstimator::SimulateSky(Plots_Struct myPlots_Struct, TH2F * hSimul
       float McIlwainL=myPlots_Struct.hMcIlwainLvsTime->GetBinContent(imid);
       if (!McIlwainL) {
           //printf("%s: MCIlwainL=0? bin=%d time=%f\n",__FUNCTION__,i_0,TIME_0);
-          exit(1);
+          throw std::runtime_error("");
       }
     
       float AllSkyRate[nEnergy+1];
       for (int iEnergy=1;iEnergy<=nEnergy;iEnergy++) {
           float ScaleFactor = hScaleFactor->GetBinContent(hScaleFactor->GetXaxis()->FindBin(RockingAngle),iEnergy);
           //printf("ie=%d rock=%f fac=%f\n",iEnergy,RockingAngle,ScaleFactor);
-          if (ScaleFactor<=0 && RockingAngle<170) {printf("%s: Scalefactor=%f, rocking angle=%f TIME_0=%f i_0=%d gti=%d %f/%f\n",__FUNCTION__,ScaleFactor,RockingAngle,TIME_0,i_0,igti,GTI_Start[igti],GTI_End[igti]); exit(1);}
+          if (ScaleFactor<=0 && RockingAngle<170) {printf("%s: Scalefactor=%f, rocking angle=%f TIME_0=%f i_0=%d gti=%d %f/%f\n",__FUNCTION__,ScaleFactor,RockingAngle,TIME_0,i_0,igti,GTI_Start[igti],GTI_End[igti]); throw std::runtime_error("");}
           //printf("%d ratefit=%f mcilwainl=%f scalefactor=%f rockingangle=%f\n",iEnergy,RateFit[iEnergy]->Eval(McIlwainL),McIlwainL,ScaleFactor,RockingAngle);
           AllSkyRate[iEnergy] = RateFit[iEnergy]->Eval(McIlwainL)*ScaleFactor;
       }      
@@ -191,7 +191,7 @@ void BackgroundEstimator::SimulateSky(Plots_Struct myPlots_Struct, TH2F * hSimul
       float PtRax =  myPlots_Struct.hPtRaxvsTime->GetBinContent(imid);
       float PtDecz = myPlots_Struct.hPtDeczvsTime->GetBinContent(imid);
       float PtDecx = myPlots_Struct.hPtDecxvsTime->GetBinContent(imid);
-      if (PtRaz==0 || PtRax==0 || PtDecz==0 || PtDecx==0){ printf("%s: there is a gap? %d %f %f %f %f \n",__FUNCTION__,imid,PtRaz,PtRax,PtDecz,PtDecx); exit(1);}
+      if (PtRaz==0 || PtRax==0 || PtDecz==0 || PtDecx==0){ printf("%s: there is a gap? %d %f %f %f %f \n",__FUNCTION__,imid,PtRaz,PtRax,PtDecz,PtDecx); throw std::runtime_error("");}
     
       astro::SkyDir SCz = astro::SkyDir(PtRaz,PtDecz,astro::SkyDir::EQUATORIAL);
       astro::SkyDir SCx = astro::SkyDir(PtRax,PtDecx,astro::SkyDir::EQUATORIAL);
@@ -204,7 +204,7 @@ void BackgroundEstimator::SimulateSky(Plots_Struct myPlots_Struct, TH2F * hSimul
     
       //float RockingAngle=SCZenith.difference(SCz)/DEG_TO_RAD;
 
-      if (RAZenith==0 || DecZenith==0) {printf("%s: FT2 has a gap! %d time=%f %f %f\n",__FUNCTION__,imid,myPlots_Struct.hRAZenithvsTime->GetBinCenter(imid),RAZenith,DecZenith); exit(1);}
+      if (RAZenith==0 || DecZenith==0) {printf("%s: FT2 has a gap! %d time=%f %f %f\n",__FUNCTION__,imid,myPlots_Struct.hRAZenithvsTime->GetBinCenter(imid),RAZenith,DecZenith); throw std::runtime_error("");}
       
       const float ThetaMax=80*DEG_TO_RAD;
       
@@ -232,7 +232,7 @@ void BackgroundEstimator::SimulateSky(Plots_Struct myPlots_Struct, TH2F * hSimul
          }
          else {   //in FOV
              float dd=2*asin(kernel)/DEG_TO_RAD;
-             if (dd>180) {printf("dd>180 %f\n",dd); exit(1);}
+             if (dd>180) {printf("dd>180 %f\n",dd); throw std::runtime_error("");}
              float L_Min=SCz.l()-dd;
              float L_Max=SCz.l()+dd;
 

@@ -7,10 +7,10 @@ double TOOLS::Integrate(TH2F * hMap, float L_BURST, float B_BURST, float ROI_RAD
 
   if (ROI_RADIUS>180) {
      printf("%s: ROI_RADIUS (%f)>180? \n",__FUNCTION__,ROI_RADIUS); 
-     exit(1);
+     throw std::runtime_error("");
   }
 
-  if (!hMap) {printf("%s: hMAP is null!!\n",__FUNCTION__); exit(1);}
+  if (!hMap) {printf("%s: hMAP is null!!\n",__FUNCTION__); throw std::runtime_error("");}
   TH2F* hIntegrantMap=NULL;
   TFile * fout = NULL;
   if (MAPNAME!="") {

@@ -1,5 +1,5 @@
 //Author: Vlasios Vasileiou <vlasisva@gmail.com>
-// $Header: /nfs/slac/g/glast/ground/cvs/GRBAnalysis-scons/BackgroundEstimator/src/BackgroundEstimator/CalcResiduals.cxx,v 1.3 2011/10/03 12:05:14 vlasisva Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/GRBAnalysis-scons/BackgroundEstimator/src/BackgroundEstimator/CalcResiduals.cxx,v 1.4 2013/11/13 07:56:16 vlasisva Exp $
 #include "BackgroundEstimator/BackgroundEstimator.h"
 
 #define DEBUG
@@ -51,7 +51,7 @@ void BackgroundEstimator::CalcResiduals(string FitsAllSkyFile){
        long nrows;int ncols;
        int status=0,hdutype,anynul;
        fits_open_file(&fptr, name, READONLY, &status);
-       if (status) {printf("error opening file %s\n",name); exit(1);}
+       if (status) {printf("error opening file %s\n",name); throw std::runtime_error("");}
 
        // Read event data
        fits_movabs_hdu(fptr, 2, &hdutype, &status);
@@ -62,9 +62,9 @@ void BackgroundEstimator::CalcResiduals(string FitsAllSkyFile){
        else if (DataClass.find("P6")!=string::npos){
            if      (ncols==22) format=DATA_FORMAT_P6_NEW;
            else if (ncols==18) format=DATA_FORMAT_P6_OLD;
-           else {printf("%s: unknown format file %s ncols=%d class=%s\n",__FUNCTION__,name,ncols,DataClass.c_str()); exit(1);}
+           else {printf("%s: unknown format file %s ncols=%d class=%s\n",__FUNCTION__,name,ncols,DataClass.c_str()); throw std::runtime_error("");}
        }
-       else {printf("%s: Unknown fits file format file %s class=%s\n",__FUNCTION__,name,DataClass.c_str()); exit(1);}
+       else {printf("%s: Unknown fits file format file %s class=%s\n",__FUNCTION__,name,DataClass.c_str()); throw std::runtime_error("");}
 
         for (int i=1;i<=nrows;i++) {
  
@@ -155,7 +155,7 @@ void BackgroundEstimator::CalcResiduals(string FitsAllSkyFile){
      TFile * fPlots = TFile::Open(name);
      Plots_Struct myPlots_Struct;
      myPlots_Struct.hMcIlwainLvsTime    = (TH1F*)fPlots->Get("hMcIlwainLvsTime");  
-     if (!myPlots_Struct.hMcIlwainLvsTime) {printf("%s: Can't read plots from file %s\n",__FUNCTION__,name); exit(1);}
+     if (!myPlots_Struct.hMcIlwainLvsTime) {printf("%s: Can't read plots from file %s\n",__FUNCTION__,name); throw std::runtime_error("");}
      myPlots_Struct.hPtRazvsTime        = (TH1F*)fPlots->Get("hPtRazvsTime");
      myPlots_Struct.hPtDeczvsTime       = (TH1F*)fPlots->Get("hPtDeczvsTime");
      myPlots_Struct.hPtRaxvsTime        = (TH1F*)fPlots->Get("hPtRaxvsTime");
@@ -168,7 +168,7 @@ void BackgroundEstimator::CalcResiduals(string FitsAllSkyFile){
      fPlots->Close();
      fsim->cd();
      for (int ie=1;ie<=Energy_Bins_datafiles;ie++) {
-        if (hSimulatedSky[ie]->Integral()<=0) {printf("%s: Error simulating sky (result=%f)\n",__FUNCTION__,hSimulatedSky[ie]->Integral()); exit(1);}
+        if (hSimulatedSky[ie]->Integral()<=0) {printf("%s: Error simulating sky (result=%f)\n",__FUNCTION__,hSimulatedSky[ie]->Integral()); throw std::runtime_error("");}
         hSimulatedSky[ie]->Write();
         hSimulatedSky_Earth[ie]->Write();   
      }
