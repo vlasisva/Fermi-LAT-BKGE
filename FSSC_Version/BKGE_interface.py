@@ -14,7 +14,7 @@ from ROOT import TOOLS, BKGE_NS
 ROOT.gStyle.SetOptStat(0)
 TOOLS.Set("GRB_NAME","") #this is to create the datadir directory of the bkg estimator (kluge)
 TOOLS.Set("BKGE_DATADIR",os.path.join(os.path.dirname(__file__),"BKGE_Datafiles")+os.path.sep)
-ResponseFunction="P7TRANSIENT_V15"     #only P7TRANSIENT reprocessed class is currently publicly supported -- this is the same P7REP_TRANSIENT
+ResponseFunction="P7REP_TRANSIENT_V15"     #only P7TRANSIENT reprocessed class is currently publicly supported -- this is the same P7REP_TRANSIENT
 TOOLS.Set("BKG_ESTIMATE_ERROR",0.15)  #see associated publication for where this number can from
 
 def CalculateBackground(start, stop , grb_trigger_time, RA, DEC, FT1, FT2, OUTPUT_DIR="output/", emin=-1, emax=-1, ebins=-1, chatter=1, overwrite=False, EvaluateMaps=True, CalcResiduals=True,
