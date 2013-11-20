@@ -12,7 +12,7 @@ TARGET_OBJS_r = $(patsubst %.cxx,%.o,$(wildcard src/rootIrfLoader/*.cxx))
 EXTLIBS    = -L${FERMI_DIR}/lib -L..
 INCLUDES   = -I. -I${FERMI_DIR}/include -Iinclude/rootIrfLoader -Iinclude -I$(ROOTINC)
 
-LINK_TARGET   = g++ $(OPT) -shared -o ../libBKGE.so  $(TARGET_OBJS)  $(TARGET_OBJS_r) $(EXTLIBS) $(ROOTLIB) -lcfitsio_3.29 -lastro -lCLHEP-2.1.0.1 -lfacilities  -lCore -lRIO -lirfLoader -ldc1aResponse -lirfInterface -ltestResponse -lst_facilities -llatResponse -ltip -lirfUtil -lf2c
+LINK_TARGET   = g++ $(OPT) -shared -o ../libBKGE.so  $(TARGET_OBJS)  $(TARGET_OBJS_r) $(EXTLIBS) $(ROOTLIB) -lcfitsio_3.29 -lastro -lCLHEP-2.1.0.1 -lfacilities  -lCore -lRIO -lirfLoader -ldc1aResponse -lirfInterface -ltestResponse -lst_facilities -llatResponse -ltip -lirfUtil -lf2c -lst_stream
 
 ########                     Targets
 all: rootIrfLoader BKGE
