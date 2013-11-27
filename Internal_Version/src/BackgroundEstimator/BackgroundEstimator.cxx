@@ -24,7 +24,7 @@ StartTime(0),EndTime(0),StopTime(0),TimeBins(0),BinSize(0.5),fResidualOverExposu
  
   if (ShowLogo) {
    printf("*----------------------------------------------*\n");
-   printf("|           Background Estimator (public)      |\n");
+   printf("|           Background Estimator               |\n");
    printf("|              v%.0f September/2013               |\n",EstimatorVersion);
    printf("|                                              |\n");
    printf("| contact:     Vlasios Vasileiou               |\n");
@@ -36,7 +36,7 @@ StartTime(0),EndTime(0),StopTime(0),TimeBins(0),BinSize(0.5),fResidualOverExposu
   L_BINS = 720;
   B_BINS = 360;
   vector <string> VALID_CLASSES;
-  VALID_CLASSES.push_back("P7TRANSIENT_V15");
+  VALID_CLASSES.push_back("P7REP_TRANSIENT_V15");
 
   bool goodClass=false;
   for (unsigned int i=0;i<VALID_CLASSES.size();i++) {
@@ -68,8 +68,7 @@ StartTime(0),EndTime(0),StopTime(0),TimeBins(0),BinSize(0.5),fResidualOverExposu
       fResidualOverExposure = TFile::Open(name);
       if (!fResidualOverExposure) {printf("%s: Data file %s cannot be read. Did you get the data files?\n",__FUNCTION__,name); throw std::runtime_error("");}
 
-      if (sscanf(fResidualOverExposure->Get("Energy_Data")->GetTitle(),"%lf_%lf_%d",&Energy_Min_datafiles,&Energy_Max_datafiles,&Energy_Bins_datafiles)!=3)
-          sscanf(fResidualOverExposure->Get("Energy_Data")->GetTitle(),"%lf-%lf-%d",&Energy_Min_datafiles,&Energy_Max_datafiles,&Energy_Bins_datafiles);
+      sscanf(fResidualOverExposure->Get("Energy_Data")->GetTitle(),"%lf_%lf_%d",&Energy_Min_datafiles,&Energy_Max_datafiles,&Energy_Bins_datafiles);
       
 
       if (Energy_Min_user<=0)  Energy_Min_user=Energy_Min_datafiles;

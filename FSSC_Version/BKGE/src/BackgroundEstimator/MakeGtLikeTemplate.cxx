@@ -7,7 +7,7 @@ int BKGE_NS::MakeGtLikeTemplate(float gtlike_ROI, string GRB_DIR, string DATACLA
 
  char name[1000];
  const char BKG_COMPONENT[3][30]={"GALGAMMAS","CR_EGAL","TOTAL"};
- BackgroundEstimator * Est = new BackgroundEstimator(DATACLASS,-1,-1,-1,false);
+ BackgroundEstimator * Est = new BackgroundEstimator(DATACLASS,-1,-1,-1,true,false);
  
  const double ENERGY_MIN_DEFAULT =Est->Energy_Min_datafiles;
  const double ENERGY_MAX_DEFAULT =Est->Energy_Max_datafiles;
