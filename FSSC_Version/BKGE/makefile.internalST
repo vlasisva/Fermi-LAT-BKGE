@@ -9,9 +9,9 @@ ROOTINC    = $(shell root-config --incdir)
 TARGET_OBJS = $(patsubst %.cxx,%.o,$(wildcard src/BackgroundEstimator/*.cxx)) $(patsubst %.cxx,%.o,$(wildcard src/BKGE_Tools/*.cxx)) 
 TARGET_OBJS_r = $(patsubst %.cxx,%.o,$(wildcard src/rootIrfLoader/*.cxx))
 
-EXTLIBS    = -L${FERMI_DIR}/lib/SuSE12-x86_64-64bit-gcc47-Optimized -L.. -L${GLAST_EXT}/fftw/3.1.2-gl1/lib -L${GLAST_EXT}/f2c/3.4-gl4/lib -L${GLAST_EXT}/cfitsio/v3290-gl1/lib -L${GLAST_EXT}/ROOT/v5.34.03-gr01/lib -L${GLAST_EXT}/cppunit/1.10.2-gl1/lib -L${GLAST_EXT}/xerces/2.8.0-gl2/lib -L${GLAST_EXT}/CLHEP/2.1.0.1-gl1/lib
+EXTLIBS    = -L${INST_DIR}/lib/SuSE12-x86_64-64bit-gcc47-Optimized -L.. -L${GLAST_EXT}/fftw/3.1.2-gl1/lib -L${GLAST_EXT}/f2c/3.4-gl4/lib -L${GLAST_EXT}/cfitsio/v3290-gl1/lib -L${GLAST_EXT}/ROOT/v5.34.03-gr01/lib -L${GLAST_EXT}/cppunit/1.10.2-gl1/lib -L${GLAST_EXT}/xerces/2.8.0-gl2/lib -L${GLAST_EXT}/CLHEP/2.1.0.1-gl1/lib
 
-INCLUDES   = -I. -I${FERMI_DIR}/include -Iinclude/rootIrfLoader -Iinclude -I$(ROOTINC) -I${GLAST_EXT}/fftw/3.1.2-gl1/include -I${GLAST_EXT}/f2c/3.4-gl4/include -I${GLAST_EXT}/cfitsio/v3290-gl1/include -I${GLAST_EXT}/ROOT/v5.34.03-gr01/include -I${GLAST_EXT}/cppunit/1.10.2-gl1/include -I${GLAST_EXT}/xerces/2.8.0-gl2/include -I${GLAST_EXT}/CLHEP/2.1.0.1-gl1/include
+INCLUDES   = -I. -I./include -I./include/BackgroundEstimator -I${INST_DIR}/include -Iinclude/rootIrfLoader -Iinclude -I$(ROOTINC) -I${GLAST_EXT}/fftw/3.1.2-gl1/include -I${GLAST_EXT}/f2c/3.4-gl4/include -I${GLAST_EXT}/cfitsio/v3290-gl1/include -I${GLAST_EXT}/ROOT/v5.34.03-gr01/include -I${GLAST_EXT}/cppunit/1.10.2-gl1/include -I${GLAST_EXT}/xerces/2.8.0-gl2/include -I${GLAST_EXT}/CLHEP/2.1.0.1-gl1/include
 
 
 LINK_TARGET   = g++ $(OPT) -shared -o ../libBKGE.so  $(TARGET_OBJS)  $(TARGET_OBJS_r) $(EXTLIBS) $(ROOTLIB) -lcfitsio -lastro -lCLHEP -lfacilities  -lCore -lRIO  

@@ -31,8 +31,8 @@ extern void G__set_cpp_environmentDict();
 
 #include "TObject.h"
 #include "TMemberInspector.h"
-#include "include/BKGE_Tools.h"
 #include "include/BackgroundEstimator.h"
+#include "include/BKGE_Tools.h"
 #include <algorithm>
 namespace std { }
 using namespace std;
@@ -40,9 +40,6 @@ using namespace std;
 #ifndef G__MEMFUNCBODY
 #endif
 
-extern G__linked_taginfo G__DictLN_TClass;
-extern G__linked_taginfo G__DictLN_TBuffer;
-extern G__linked_taginfo G__DictLN_TMemberInspector;
 extern G__linked_taginfo G__DictLN_vectorlEdoublecOallocatorlEdoublegRsPgR;
 extern G__linked_taginfo G__DictLN_string;
 extern G__linked_taginfo G__DictLN_vectorlEROOTcLcLTSchemaHelpercOallocatorlEROOTcLcLTSchemaHelpergRsPgR;
