@@ -1,0 +1,25 @@
+/** 
+  @file release.notes
+  @brief package BackgroundEstimator
+
+  @verbatim
+  $Id: release.notes,v 1.13 2012/12/12 18:23:06 omodei Exp $
+  EOH
+
+ BackgroundEstimator-00-06-01 12-Dec-2012 omodei Automatic Tagging of GRBAnalysis packages
+ BackgroundEstimator-00-06-00 27-Nov-2012 omodei Automatic Tagging of GRBAnalysis packages
+ BackgroundEstimator-00-05-00 17-Apr-2012 omodei Automatic Tagging of GRBAnalysis packages
+ BackgroundEstimator-00-04-00 02-Feb-2012 omodei Fixing file definition for the LLE datarelease
+ BackgroundEstimator-00-03-00 06-Oct-2011 vlasisva Cleaned version of bkge
+ BackgroundEstimator-00-02-01 03-Oct-2011 omodei New version set up and ready to use
+ BackgroundEstimator-00-02-00 14-Sep-2011 vlasisva pre-bkge_p7
+ BackgroundEstimator-00-01-03 26-Aug-2011 bregeon src/mainpage.h and doc/Doxyfile for Doxygen
+ BackgroundEstimator-00-01-02 19-Aug-2011 bregeon patch just for tag collector
+ BackgroundEstimator-00-01-01 29-Jun-2011    jrb readjustments in duration estimator for better Plateau finding (for Vlasios)
+ BackgroundEstimator-00-01-00 13-Jun-2011    jrb first tag for BackgroundEstimator in its new home
+       -- prior to move to GRBAnalysis-scons --
+ BackgroundEstimator-00-00-02 04-May-2011 omodei Test to checkout release notes.
+ BackgroundEstimator-00-00-01 04-May-2011 omodei Test to checkout release notes.
+
+  @endverbatim
+*/
