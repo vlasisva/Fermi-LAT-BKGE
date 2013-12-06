@@ -57,7 +57,7 @@ StartTime(0),EndTime(0),StopTime(0),TimeBins(0),BinSize(0.5),fResidualOverExposu
   //Assume the public version, and fall back to the internal one
   try {
     DataDir           =TOOLS::GetS("BKGE_DATADIR");
-  } catch {
+  } catch (...) {
     DataDir           =TOOLS::GetS("BASEDIR")+"/gtgrb_data/Bkg_Estimator/";
   }
 
