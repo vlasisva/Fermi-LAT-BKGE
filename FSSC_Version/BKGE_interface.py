@@ -96,7 +96,7 @@ def MakeGtLikeTemplate(start, stop, grb_trigger_time, RA, DEC, FT1, FT2, OUTPUT_
        
     if chatter: print("Using a constant ROI radius of %d deg\n" %ROI_Radius)
     CalculateBackground(start,stop,grb_trigger_time, RA,DEC, FT1, FT2, OUTPUT_DIR, EvaluateMaps=False, ROI_Calculate=0, ROI_Radius=ROI_Radius,  GRB_NAME=GRB_NAME, chatter=chatter )
-    BKGE_NS.MakeGtLikeTemplate(ROI_Radius, OUTPUT_DIR+'/'+GRB_NAME+'/%.2f_%.2f/' %(start,stop), ResponseFunction)
+    BKGE_NS.MakeGtLikeTemplate(ROI_Radius, OUTPUT_DIR+'/'+'Bkg_Estimates'+'/%.2f_%.2f/' %(start,stop), ResponseFunction)
 
 
 

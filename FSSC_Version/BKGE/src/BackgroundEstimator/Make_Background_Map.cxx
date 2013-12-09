@@ -93,8 +93,8 @@ int BackgroundEstimator::Make_Background_Map(string FT1_FILE, string FT2_FILE, s
   //fits_read_col (fptr,TDOUBLE,10,nrows, 1, 1, NULL,&File_t1, &anynul, &status);
   fits_close_file(fptr, &status);
 
-  if (Burst_t0<File_t0) {printf("%s: data files start at time %f and you requested an estimation for an earlier time (%f).\n",__FUNCTION__,File_t0,Burst_t0); throw std::runtime_error("");}
-  if (Burst_t1>File_t1) {
+  if (Burst_t0<File_t0-1e-2) {printf("%s: data files start at time %f and you requested an estimation for an earlier time (%f).\n",__FUNCTION__,File_t0,Burst_t0); throw std::runtime_error("");}
+  if (Burst_t1>File_t1+1e-2) {
         printf("%s: data files end at time %f and you requested an estimation for a later time (%f).\n",__FUNCTION__,File_t1,Burst_t1);
         throw std::runtime_error("");
   }

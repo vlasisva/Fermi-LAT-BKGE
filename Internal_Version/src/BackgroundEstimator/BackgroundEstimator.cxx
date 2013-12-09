@@ -10,14 +10,14 @@ BackgroundEstimator::~BackgroundEstimator()
 BackgroundEstimator::BackgroundEstimator(string aClass, double EMin, double EMax, int EBins, bool initialize, bool ShowLogo):
 Energy_Min_datafiles(0),Energy_Max_datafiles(0),Energy_Bins_datafiles(0),
 Energy_Min_user(EMin),Energy_Max_user(EMax),Energy_Bins_user(EBins),UsingDefaultBinning(true),
-DataClass(aClass),FT1ZenithTheta_Cut(100),EstimatorVersion(4),Residuals_version(2.0),RateFit_version(2.0),ThetaPhiFits_version(2.0),EastWest_version(2.0),TimeCorrectionFactors_version(3.0),
+DataClass(aClass),FT1ZenithTheta_Cut(100),EstimatorVersion(4.1),Residuals_version(2.0),RateFit_version(2.0),ThetaPhiFits_version(2.0),EastWest_version(2.0),TimeCorrectionFactors_version(3.0),
 StartTime(0),EndTime(0),StopTime(0),TimeBins(0),BinSize(0.5),fResidualOverExposure(0),fRateFit(0),fThetaPhiFits(0),fCorrectionFactors(0)
 {
  
   if (ShowLogo) {
    printf("*----------------------------------------------*\n");
    printf("|           Background Estimator               |\n");
-   printf("|              v%.0f September/2013               |\n",EstimatorVersion);
+   printf("|              v%.1f December/2013            |\n",EstimatorVersion);
    printf("|                                              |\n");
    printf("| contact:     Vlasios Vasileiou               |\n");
    printf("|              vlasisva@gmail.com              |\n");
@@ -53,7 +53,13 @@ StartTime(0),EndTime(0),StopTime(0),TimeBins(0),BinSize(0.5),fResidualOverExposu
   ConversionType      =TOOLS::GetConversionType(DataClass);
   DataClassVersion    =TOOLS::GetDataClassVersion(DataClass);
   MinCTBClassLevel    =TOOLS::GetCTBClassLevel(DataClass);
-  DataDir             =TOOLS::GetS("BASEDIR")+"/gtgrb_data/Bkg_Estimator/";
+  
+  //Assume the public version, and fall back to the internal one
+  try {
+    DataDir           =TOOLS::GetS("BKGE_DATADIR");
+  } catch (...) {
+    DataDir           =TOOLS::GetS("BASEDIR")+"/gtgrb_data/Bkg_Estimator/";
+  }
 
   if (initialize) { //normal operation
       sprintf(name,"%sResidual_Over_Exposure_%s_%.1f.root",DataDir.c_str(),DataClass.c_str(),Residuals_version);
