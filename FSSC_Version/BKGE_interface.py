@@ -215,7 +215,7 @@ def Make_BKG_PHA(start, stop, grb_trigger_time, RA, DEC, FT1, FT2, emin, emax, e
 
 
     pha_file.close()
-   
+    return ("%s/%s" %(output_path,pha_filename))
 
 
 
