@@ -169,7 +169,7 @@ def Make_BKG_PHA(start, stop, grb_trigger_time, RA, DEC, FT1, FT2, emin, emax, e
     sys_err_col=pyfits.Column(name="SYS_ERR",format="E",array=sys_err)
     new_table = pyfits.new_table(pha_file[1].columns+stat_err_col+sys_err_col)
     for i in pha_file[1].header.items():
-        if not new_table.header.has_key(i[0]):
+        if not (i[0] in new_table.header):
             new_table.header.update(i[0],i[1])
     pha_file[1]=new_table
 
