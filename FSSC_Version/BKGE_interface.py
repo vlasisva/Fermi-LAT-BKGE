@@ -124,7 +124,7 @@ def Make_BKG_PHA(start, stop, grb_trigger_time, RA, DEC, FT1, FT2, emin, emax, e
        GRB_NAME="GRB_MET_%.2f" %grb_trigger_time
 
     pha_filename = "%s_%.2f_%.2f_%s.pha" %(ResponseFunction,start,duration,suffix)
-    output_path  = "%s/%s/%.2f_%.2f" %(OUTPUT_DIR,'Bkg_Estimates',start,stop)
+    output_path  = "%s/%s/%.2f_%.2f" %(OUTPUT_DIR,GRB_NAME,start,stop)
     if chatter: print "Results will be saved in file %s/%s" %(output_path,pha_filename)
         
     CalculateBackground(start, stop , grb_trigger_time, RA, DEC, FT1, FT2, OUTPUT_DIR, emin, emax, ebins, chatter, overwrite,True, True,\
@@ -146,7 +146,7 @@ def Make_BKG_PHA(start, stop, grb_trigger_time, RA, DEC, FT1, FT2, emin, emax, e
     #I am doing this cd to dir thing and then execute ascii2pha locally because (if I remember correctly) ascii2pha had some maximum arguments length that was being broken by a too long command.   
     tmp_filename = "%s_bkg_for_PHA_%.0f_%.0f.txt" %(ResponseFunction,emin,emax)
     cmd = "cd %s/%s/%.2f_%.2f ;ascii2pha infile=%s chantype=PI outfile=%s chanpres=yes dtype=2 qerror=no rows=- fchan=1 detchans=%d pois=no telescope=GLAST instrume=LAT detnam=LAT filter=NONE tlmin=1 exposure=%f clobber=yes" \
-        %(OUTPUT_DIR,'Bkg_Estimates',start,stop,tmp_filename,pha_filename,ebins,duration)
+        %(OUTPUT_DIR,GRB_NAME,start,stop,tmp_filename,pha_filename,ebins,duration)
     status,output=commands.getstatusoutput(cmd)
     if chatter:
         print cmd
@@ -169,7 +169,7 @@ def Make_BKG_PHA(start, stop, grb_trigger_time, RA, DEC, FT1, FT2, emin, emax, e
     sys_err_col=pyfits.Column(name="SYS_ERR",format="E",array=sys_err)
     new_table = pyfits.new_table(pha_file[1].columns+stat_err_col+sys_err_col)
     for i in pha_file[1].header.items():
-        if not (i[0] in new_table.header):
+        if not new_table.header.has_key(i[0]):
             new_table.header.update(i[0],i[1])
     pha_file[1]=new_table
 
@@ -215,7 +215,7 @@ def Make_BKG_PHA(start, stop, grb_trigger_time, RA, DEC, FT1, FT2, emin, emax, e
 
 
     pha_file.close()
-    return ("%s/%s" %(output_path,pha_filename))
+   
 
 
 
@@ -243,7 +243,7 @@ def Make_BKG_PHA2(grb_trigger_time, RA, DEC, FT1, FT2, emin, emax, ebins,
     if (GRB_NAME==""):
       GRB_NAME="GRB_MET_%.2f" %grb_trigger_time
 
-    output_path  = "%s/%s/%.2f_%.2f" %(OUTPUT_DIR,'Bkg_Estimates',start,stop)
+    output_path  = "%s/%s/%.2f_%.2f" %(OUTPUT_DIR,GRB_NAME,start,stop)
     
     #time bins setup
     at0=[]; at1=[]; adt=[]
@@ -303,7 +303,7 @@ def Make_BKG_PHA2(grb_trigger_time, RA, DEC, FT1, FT2, emin, emax, ebins,
         CalculateBackground(at0[i],at1[i],grb_trigger_time, RA, DEC, FT1, FT2, OUTPUT_DIR, emin, emax, ebins, chatter, overwrite, True, True, ROI_Calculate, \
         ROI_Containment, ROI_Localization_Error, ROI_Radius, ROI_Max_Radius, GRB_NAME,ROI_RadiusFile)
 
-        an_output_path  = "%s/%s/%.2f_%.2f" %(OUTPUT_DIR,'Bkg_Estimates',at0[i],at1[i])
+        an_output_path  = "%s/%s/%.2f_%.2f" %(OUTPUT_DIR,GRB_NAME,at0[i],at1[i])
         
         results_filename = "%s/%s_bkg_%.0f_%.0f.root" %(an_output_path,ResponseFunction,emin,emax)
         dfile = ROOT.TFile(results_filename,"r")
